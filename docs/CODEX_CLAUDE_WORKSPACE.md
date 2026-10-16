@@ -1073,3 +1073,5 @@ Open decisions are tracked in `docs/OUTSTANDING_DECISIONS.md`. Do not block impl
 ## Codex - 2026-10-16 - v2 release
 
 Prepared legacy access profile consolidation (migration 119), university relationship support (migration 120), and admin dropdown label/width fixes for the requested v2 push and droplet redeployment. All 46 focused tests passed; migrations 001-120 passed against a fresh disposable database in production mode. Release identifier: v2 Git tag. Deployment uses committed source only. No local legacy data, development accounts or seeders are deployed.
+
+Deployment completed: revision 3f8db86 (tag v2) is live at https://portal.luminarytech.org. Migrations 119 and 120 applied, systemd service is active, public production/database health checks pass, and public CSS/JS include all three dropdown fixes. Main and annotated v2 tag were pushed successfully. Pre-deploy database backup: /var/backups/svu/pre-v2-20261016-182309.dump. Verified 2026-10-16 at 20:29 SAST.
