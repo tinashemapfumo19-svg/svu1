@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('shared shell, home filters, pins and staff commands remain usable across screen sizes', async ({ page }, info) => {
+test('shared shell, home filters and staff commands remain usable across screen sizes', async ({ page }, info) => {
   test.setTimeout(180000);
   if (!process.env.DATABASE_URL || !/^\/svu_rebuild_it_\d+$/.test(new URL(process.env.DATABASE_URL).pathname)) throw new Error('Use the isolated integration runner.');
   const errors = [];
@@ -10,15 +10,8 @@ test('shared shell, home filters, pins and staff commands remain usable across s
   await page.locator('[data-shell-signin] [name=password]').fill('Phase1-Admin-Password-2026!');
   await page.locator('[data-shell-signin] button[type=submit]').click();
   await expect(page.locator('[data-home-area="Students"]')).toBeVisible();
-  const accountPanel = await page.locator('.ui-rail').elementHandle();
-  await page.locator('[data-home-pin="students"]').click();
-  expect(await accountPanel.evaluate(node => node.isConnected)).toBe(true);
-  await expect(page.locator('[data-home-pin="students"]')).toHaveAttribute('aria-pressed', 'true');
-  await page.locator('[data-home-filter="pinned"]').click();
-  await expect(page.locator('[data-home-area]')).toHaveCount(1);
-  await expect(page.locator('[data-home-area="Students"]')).toBeVisible();
-  await page.locator('[data-home-pin="students"]').click();
-  await expect(page.getByText('No pinned work areas', { exact: true })).toBeVisible();
+  // Work-area cards carry no pin buttons, no Pinned filter and no arrow.
+  await expect(page.locator('.home-pin, [data-home-filter="pinned"], .home-work-areas .ui-chevron')).toHaveCount(0);
   await page.locator('[data-home-filter="business"]').click();
   await expect(page.locator('[data-home-area="Finance"]')).toBeVisible();
   await expect(page.locator('[data-home-area="Students"]')).toHaveCount(0);
@@ -52,7 +45,7 @@ test('shared shell, home filters, pins and staff commands remain usable across s
   await expect(page).toHaveURL(/#registry\/finance$/);
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await page.goto('/#home');
-  await page.locator('[data-home-pin="students"]').click();
+  await expect(page.locator('[data-home-area="Students"]')).toBeVisible();
   await page.evaluate(() => window.svuSession.clear());
   await expect(page.locator('[data-shell-command]')).toHaveCount(0);
   expect(errors).toEqual([]);

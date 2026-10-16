@@ -7,7 +7,6 @@
   let view = { token: undefined, data: null, loading: false, error: null };
   let catalogue = null;
   let areaFilter = 'all';
-  const pinnedAreas = new Set();
 
   async function get(path, token) {
     const response = await fetch(path, { headers: { Accept: "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) } });
@@ -127,19 +126,16 @@
   const areaTones = { admissions: 'lavender', students: 'blue', support: 'cyan', finance: 'green', teaching: 'blue', exams: 'lavender', documents: 'blue', reports: 'blue', academic: 'blue', admin: '', leave: 'amber', assets: '', fleet: 'cyan', cashbook: 'green', privacy: '' };
   function staffAreas(data, includeSummary = true) {
     const shell = window.svuShell, ui = window.svuUI;
-    const systemAdmin = window.svuSession.cached()?.roles?.some(role => role.code === 'system_administrator');
-    if (systemAdmin && areaFilter === 'pinned') areaFilter = 'all';
     const tiles = [];
     if (window.svuSession.canAny(shell.admissionsPerms)) tiles.push({ id: 'admissions', group: 'student', href: "#admissions", label: "Admissions", text: "Application review, decisions, enquiries and guidance.", glyph: "admissions", count: data.queue?.length ? `${data.queue.length}${data.queue.length === 50 ? "+" : ""} in queue` : null });
     for (const area of shell.visibleAreas()) tiles.push({ id: area.id, group: areaGroups[area.id], href: `#registry/${area.id}`, label: area.label, text: area.text, glyph: areaGlyphs[area.id] || "workspace" });
     if (data.teaching) tiles.push({ id: 'my-teaching', group: 'academic', href: "#learning", label: "My teaching", text: "Your allocated courses and class lists.", glyph: "learning" });
     tiles.push({ id: 'resources', group: 'business', href: "#resources", label: "Resources", text: "Library catalogue, document repository and templates.", glyph: "resources" });
-    const groups = [['all', 'All'], ['pinned', 'Pinned'], ['student', 'Student'], ['academic', 'Academic'], ['business', 'Business'], ['system', 'System']];
-    const card = tile => `<article class="home-area-item"><a class="area-tile ui-course" href="${tile.href}" data-home-area="${esc(tile.label)}"><div class="ui-course-top">${ui.ico(tile.glyph, areaTones[tile.id] || 'blue', 'ui-icon-sm')}${tile.count ? ui.badge(tile.count, 'amber') : ''}</div><h3>${esc(tile.label)}</h3><p class="ui-meta">${esc(tile.text)}</p>${systemAdmin ? '' : `<span class="ui-course-foot">${ui.chevron}</span>`}</a>${systemAdmin ? '' : `<button class="icon-button home-pin" type="button" data-home-pin="${tile.id}" aria-label="${pinnedAreas.has(tile.id) ? 'Unpin' : 'Pin'} ${esc(tile.label)}" aria-pressed="${pinnedAreas.has(tile.id)}" title="${pinnedAreas.has(tile.id) ? 'Unpin from Home' : 'Pin to Home'}">${ui.glyph('pin')}</button>`}</article>`;
-    const visible = tiles.filter(tile => areaFilter === 'all' || (areaFilter === 'pinned' ? pinnedAreas.has(tile.id) : tile.group === areaFilter));
-    visible.sort((a, b) => Number(pinnedAreas.has(b.id)) - Number(pinnedAreas.has(a.id)));
-    const filters = `<div class="ui-segmented home-area-filters" role="group" aria-label="Work area filters">${groups.filter(([id]) => (id !== 'pinned' || !systemAdmin) && (['all', 'pinned'].includes(id) || tiles.some(tile => tile.group === id))).map(([id, label]) => `<button type="button" data-home-filter="${id}" aria-pressed="${areaFilter === id}">${label}</button>`).join('')}</div>`;
-    return `${includeSummary ? weekTiles(data) : ''}${includeSummary && window.svuSession.can("appointments.host") ? '<section class="ui-panel" data-appointments-host></section>' : ''}${ui.panel('Your work areas', `${filters}<div class="ui-area-grid">${visible.map(card).join('')}</div>${visible.length ? '' : ui.emptyState({ glyph: 'pin', title: 'No pinned work areas', compact: true })}`, { cls: 'home-work-areas' })}`;
+    const groups = [['all', 'All'], ['student', 'Student'], ['academic', 'Academic'], ['business', 'Business'], ['system', 'System']];
+    const card = tile => `<article class="home-area-item"><a class="area-tile ui-course" href="${tile.href}" data-home-area="${esc(tile.label)}"><div class="ui-course-top">${ui.ico(tile.glyph, areaTones[tile.id] || 'blue', 'ui-icon-sm')}${tile.count ? ui.badge(tile.count, 'amber') : ''}</div><h3>${esc(tile.label)}</h3><p class="ui-meta">${esc(tile.text)}</p></a></article>`;
+    const visible = tiles.filter(tile => areaFilter === 'all' || tile.group === areaFilter);
+    const filters = `<div class="ui-segmented home-area-filters" role="group" aria-label="Work area filters">${groups.filter(([id]) => id === 'all' || tiles.some(tile => tile.group === id)).map(([id, label]) => `<button type="button" data-home-filter="${id}" aria-pressed="${areaFilter === id}">${label}</button>`).join('')}</div>`;
+    return `${includeSummary ? weekTiles(data) : ''}${includeSummary && window.svuSession.can("appointments.host") ? '<section class="ui-panel" data-appointments-host></section>' : ''}${ui.panel('Your work areas', `${filters}<div class="ui-area-grid">${visible.map(card).join('')}</div>`, { cls: 'home-work-areas' })}`;
   }
 
   // "This week" tiles: the same counts as the Monday digest, each opening the matching list.
@@ -209,7 +205,6 @@
       bindAreas(app, data);
     };
     app.querySelectorAll('[data-home-filter]').forEach(button => button.addEventListener('click', () => { areaFilter = button.dataset.homeFilter; update(); app.querySelector(`[data-home-filter="${areaFilter}"]`)?.focus(); }));
-    app.querySelectorAll('[data-home-pin]').forEach(button => button.addEventListener('click', () => { const id = button.dataset.homePin; pinnedAreas.has(id) ? pinnedAreas.delete(id) : pinnedAreas.add(id); update(); (app.querySelector(`[data-home-pin="${id}"]`) || app.querySelector('[data-home-filter="pinned"]'))?.focus(); }));
   }
 
   async function render(app) {
@@ -256,6 +251,6 @@
   setInterval(updateClock, 60000);
   window.addEventListener('focus', updateClock);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) updateClock(); });
-  window.svuSession.onChange(() => { refresh(); pinnedAreas.clear(); areaFilter = 'all'; });
+  window.svuSession.onChange(() => { refresh(); areaFilter = 'all'; });
   window.homeUI = { render, refresh };
 })();
