@@ -76,6 +76,17 @@ async function conflictsFor(db,candidate) {
   return allocationConflicts(candidate,others);
 }
 
+async function legacyTeachingFor(db,actor,staffId = null) {
+  const rows = (await db.query(`select l.source_ref as "sourceRef",l.staff_id as "staffId",l.source_staff_code as "sourceStaffCode",
+    l.source_active as "sourceActive",l.source_allocation_date as "sourceAllocationDate",l.reconciliation_status as "reconciliationStatus",
+    c.code,c.title,p.code as "programmeCode",m.legal_name as "staffName"
+    from legacy_teaching_links l join courses c on c.id=l.course_id
+    join programme_versions v on v.id=l.programme_version_id join programmes p on p.id=v.programme_id
+    left join staff_members m on m.id=l.staff_id where ($1::text is null or l.staff_id=$1)
+    order by p.code,c.code,l.source_ref`,[staffId])).rows;
+  return rows.filter(row=>actorCanAccessScope({...actor,authorizingPermission:staffId ? 'teaching.self' : 'teaching.view'},{programmeCode:row.programmeCode}));
+}
+
 export function createTeachingModule(pool) {
   return {
     async getPeriodTeaching(periodId,actor) {
@@ -177,7 +188,7 @@ export function createTeachingModule(pool) {
             }
           }
         }
-        return {periods,uncovered,workload:[...workload.values()].sort((a,b) => b.units - a.units)};
+        return {periods,uncovered,workload:[...workload.values()].sort((a,b) => b.units - a.units),legacyLinks:await legacyTeachingFor(db,actor)};
       });
     },
     async myTeaching(actor) {
@@ -185,7 +196,7 @@ export function createTeachingModule(pool) {
         const staff = (await db.query("select id,status from staff_members where account_id = $1",[actor.accountId])).rows[0];
         if (!staff) throw requestError(404,"No staff record is linked to this account.");
         const allocations = (await db.query(`${allocationSelect} where a.staff_id = $1 and a.status = 'active' order by a.effective_from desc`,[staff.id])).rows;
-        return {staffId:staff.id,status:staff.status,allocations};
+        return {staffId:staff.id,status:staff.status,allocations,legacyLinks:await legacyTeachingFor(db,actor,staff.id)};
       });
     },
     // Lecturers see class lists only through an active allocation in force today; registry staff through their scope.

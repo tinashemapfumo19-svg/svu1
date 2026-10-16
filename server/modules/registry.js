@@ -34,6 +34,7 @@ export function onboardingReadiness(profile) {
 
 const programmeSelect = `select sp.id, s.student_number as "studentNumber", pe.legal_name as "legalName", sp.student_id as "studentId", sp.status,sp.legacy_source_status as "legacySourceStatus",sp.status_revision as "statusRevision",
  sp.application_id as "applicationId",sp.origin_programme_id as "originProgrammeId",sp.transfer_request_id as "transferRequestId", sp.intake_id as "intakeId", sp.programme_version_id as "programmeVersionId",
+ sp.legacy_recorded_study_year as "legacyRecordedStudyYear",sp.legacy_study_year_updated_on as "legacyStudyYearUpdatedOn",
  p.code as "programmeCode", p.name as "programmeName", i.label as "intakeLabel",v.version_label as "versionLabel",
  d.name as department, f.name as faculty, a.study_mode_code as "studyModeCode", sp.created_at as "convertedAt",${studyYearSelect}
  from student_programmes sp join intakes i on i.id = sp.intake_id

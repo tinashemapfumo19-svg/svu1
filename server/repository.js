@@ -397,6 +397,7 @@ export function createRepository(pool, options = {}) {
       };
 
       await withTransaction(pool, async (client) => {
+        if (!(await client.query('select 1 from roles where code=$1 and active and is_assignable', [invitation.roleCode])).rowCount) throw requestError(400, 'Select an available consolidated role.');
         await lockAccountMailbox(client, invitation.email);
         await requireNewAccountMailbox(client, invitation.email);
         await client.query(
@@ -769,6 +770,7 @@ export function createRepository(pool, options = {}) {
       };
 
       await withTransaction(pool, async (client) => {
+        if (!(await client.query('select 1 from roles where code=$1 and active and is_assignable', [assignment.roleCode])).rowCount) throw requestError(400, 'Select an available consolidated role.');
         await client.query(
           `insert into role_assignments (id, account_id, role_code, scope, effective_from, granted_by, reason)
            values ($1, $2, $3, $4, $5, $6, $7)`,

@@ -1,5 +1,9 @@
 # Legacy database cutover — 16 October 2026
 
+Current role-login setup: see [consolidated legacy access profiles](LEGACY_ROLE_CONSOLIDATION.md) and the [eight-role login list](ROLE_LOGINS.md). The subsequent role-account changes are separate from the original source-data counts below.
+
+Subsequent university-data linking is recorded in [university data alignment](UNIVERSITY_DATA_ALIGNMENT.md): programme/module curricula, previous teaching links, staff context and recorded study years are now connected in the application.
+
 The configured `svu_rebuild` PostgreSQL database now uses the supplied `southval_db (1).sql` as its operational data source. Demo operational rows were removed atomically. The modern schema, migration ledger and required role/permission/workflow/template configuration were retained. No legacy SQL statements were executed.
 
 Source SHA-256: `0a2434e24fdf606bcbbcab8cdd12faa29eb4d256d1553016269639d4289a2acd`.

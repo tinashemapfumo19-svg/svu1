@@ -1,6 +1,6 @@
 (function () {
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g,(char) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[char]);
-  const human = (value) => String(value ?? "").replaceAll("_"," ");
+  const human = (value) => ({system_administrator:'Sysadmin',legacy_super_user:'Super user',legacy_management:'Management',legacy_supervisor:'Supervisor',legacy_reports:'Reports Access Only',legacy_staff:'User'}[value] || String(value ?? "").replaceAll("_"," "));
   function employmentFields(state,current = {}) {
     const units = state.staffUnits || [],categories = state.staffCategories || [],people = (state.staff?.items || []).filter((row) => row.status !== "exited" && row.id !== current.id);
     return `<label class="field"><span>Department</span><select class="input" name="departmentId" required>${units.map((unit) => `<option value="${esc(unit.id)}" ${unit.id === current.departmentId ? "selected" : ""}>${esc(unit.name)}</option>`).join("")}</select></label>

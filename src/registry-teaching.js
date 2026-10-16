@@ -2,6 +2,10 @@
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g,(char) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[char]);
   const human = (value) => String(value ?? "").replaceAll("_"," ");
   const roles = ["lead","co_lecturer","tutor","moderator","examiner"];
+  function legacyLinks(rows = []) {
+    if (!rows.length) return '';
+    return `<details class="legacy-teaching-links"><summary>Previous teaching assignments (${rows.length})</summary><p>Academic periods must be confirmed before these assignments become current teaching allocations.</p><ul class="plain-list">${rows.map(row=>`<li><strong>${esc(row.code)}</strong> ${esc(row.title)} · ${esc(row.programmeCode)} · ${esc(row.staffName || 'Unmatched staff code '+row.sourceStaffCode)} · ${row.sourceActive ? 'Recorded active' : 'Recorded inactive'} · ${esc(row.sourceAllocationDate || 'Date not recorded')}</li>`).join('')}</ul></details>`;
+  }
   function classList(state,id) {
     const list = state.classLists?.[id];
     return list ? `<div class="class-list" data-class-list="${id}"><strong>${list.students.length} enrolled</strong><ul>${list.students.map((row) => `<li>${esc(row.studentNumber)} - ${esc(row.legalName)} (${esc(row.registrationReference)})</li>`).join("")}</ul></div>` : "";
@@ -41,7 +45,7 @@
         <h3>Uncovered offerings</h3>${overview.uncovered.length ? `<ul class="uncovered-list">${overview.uncovered.map((row) => `<li><strong>${esc(row.code)}</strong> ${esc(row.title)} - ${esc(row.programmeCode)} ${esc(row.intakeLabel)} ${esc(row.periodName)} - ${row.enrolled} enrolled - ${esc(row.reason)}</li>`).join("")}</ul>` : "<p>Every open offering has an active lead lecturer.</p>"}
         <h3>Workload</h3>${overview.workload.length ? `<ul class="workload-list">${overview.workload.map((row) => `<li data-workload="${esc(row.staffId)}">${esc(row.staffName)} (${esc(row.employeeNumber)}): ${row.units} units across ${row.allocations} allocation(s)${row.staffStatus !== "active" ? ` - ${esc(row.staffStatus)}` : ""}</li>`).join("")}</ul>` : "<p>No active allocations.</p>"}
         <h3>Registration periods</h3><div class="hero-actions">${overview.periods.map((row) => `<button class="button button-secondary" type="button" data-teaching-load="${esc(row.id)}">${esc(row.programmeCode)} ${esc(row.intakeLabel)} - ${esc(row.name)}</button>`).join("") || "<p>No open registration periods.</p>"}</div>
-        ${periodView(state)}</details>` : ""}`;
+        ${legacyLinks(overview.legacyLinks)}${periodView(state)}</details>` : ""}${!overview && mine ? legacyLinks(mine.legacyLinks) : ''}`;
   }
   async function load(state,api) {
     state.teachingOverview = await api("GET","/api/teaching/overview").catch(() => null);

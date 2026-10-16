@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { staffInvitationRoles, staffTransitions, validateEmploymentChange, validateNewStaff, validateStatusChange } from "../server/modules/staff.js";
 
-const staff = (overrides = {}) => ({email:"Lecturer@Example.edu",legalName:"Rumbidzai Moyo",preferredName:"Rumbi",category:"LECTURER",grade:"L2",departmentId:"dept_computing",engagedOn:"2026-01-15",roleCode:"lecturer",reason:"Approved appointment",...overrides});
+const staff = (overrides = {}) => ({email:"Lecturer@Example.edu",legalName:"Rumbidzai Moyo",preferredName:"Rumbi",category:"LECTURER",grade:"L2",departmentId:"dept_computing",engagedOn:"2026-01-15",roleCode:"legacy_staff",reason:"Approved appointment",...overrides});
 
 test("new staff records normalise email and refuse critical or self-service roles",() => {
   assert.deepEqual(validateNewStaff(staff()),{email:"lecturer@example.edu",engagedOn:"2026-01-15"});
@@ -10,7 +10,8 @@ test("new staff records normalise email and refuse critical or self-service role
   for (const change of [{roleCode:"system_administrator"},{email:"not-an-email"},{employeeNumber:"e 1"},{category:"lecturer"},{grade:""},{reason:" "},{engagedOn:"2026-02-30"},{scope:{faculties:["x"]}},{salary:1}]) {
     assert.throws(() => validateNewStaff(staff(change)),{statusCode:400});
   }
-  assert.doesNotThrow(() => validateNewStaff(staff({employeeNumber:"EMP-0042",roleCode:"admissions_officer",scope:{programmeCodes:["BSC-IS"]}})));
+  assert.doesNotThrow(() => validateNewStaff(staff({employeeNumber:"EMP-0042",roleCode:"legacy_supervisor",scope:{programmeCodes:["BSC-IS"]}})));
+  assert.throws(() => validateNewStaff(staff({roleCode:'lecturer'})),{statusCode:400});
 });
 
 test("employment changes and status changes follow explicit, dated rules",() => {

@@ -343,11 +343,12 @@ body { background: var(--svu-bg-page); color: var(--svu-text-primary); font-fami
 /* ---------- Forms ---------- */
 .form { gap: var(--svu-space-5); }
 .form-grid { gap: var(--svu-space-5); }
-.field { display: grid; gap: var(--svu-space-2); margin: 0; }
+.field { display: grid; gap: var(--svu-space-2); margin: 0; min-width: 0; }
 .field > span { font-size: 13px; line-height: 18px; font-weight: 550; color: var(--svu-text-primary); }
 .input, .page-container :is(input[type="text"], input[type="tel"], input[type="email"], input[type="password"], input[type="date"], input[type="datetime-local"], input[type="number"], input[type="search"]):not(.search input), .page-container select, .page-container textarea { min-height: 44px; padding: 0 14px; border: 1px solid var(--svu-border-strong); border-radius: var(--svu-radius-control); background-color: var(--svu-bg-solid); color: var(--svu-text-primary); font: inherit; font-size: 14px; transition: border-color var(--svu-dur) var(--svu-ease), box-shadow var(--svu-dur) var(--svu-ease); }
 .page-container textarea, textarea.input { min-height: 96px; padding: 12px 14px; line-height: 21px; }
 .page-container select, select.input { appearance: none; -webkit-appearance: none; padding-right: 40px; background: var(--svu-bg-solid) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center / 16px; }
+.page-container select, select.input { min-width: 0; max-width: 100%; text-overflow: ellipsis; }
 .input:focus, .page-container :is(input, select, textarea):focus { outline: none; border-color: var(--svu-blue); box-shadow: 0 0 0 3px var(--svu-blue-ring); }
 .input:disabled, .page-container :is(input, select, textarea):disabled { background-color: var(--svu-bg-muted); color: var(--svu-text-secondary); cursor: not-allowed; }
 .page-container input[type="checkbox"], .page-container input[type="radio"] { width: 18px; height: 18px; min-height: 0; padding: 0; accent-color: var(--svu-blue); box-shadow: none; }

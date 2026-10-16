@@ -20,6 +20,7 @@ const courseSelect = `select
   c.level,
   c.department_id as "departmentId",
   c.status,
+  c.legacy_source_ref as "legacySourceRef",
   to_char(c.effective_from, 'YYYY-MM-DD') as "effectiveFrom",
   to_char(c.effective_to, 'YYYY-MM-DD') as "effectiveTo",
   coalesce(
@@ -82,6 +83,12 @@ export function curriculumProblems(entries) {
   const byCourse = new Map(entries.map((entry) => [entry.courseId, entry]));
   const problems = [];
   for (const entry of entries) {
+    if (entry.legacySourceRef) {
+      if (!['core','elective'].includes(entry.requirementType)) problems.push({course:entry.code,problem:'core/elective classification is not recorded'});
+      if (!(entry.credits > 0)) problems.push({course:entry.code,problem:'course credits are not recorded'});
+      if (!entry.effectiveFrom) problems.push({course:entry.code,problem:'course effective date is not recorded'});
+      if (entry.status === 'draft') problems.push({course:entry.code,problem:'course catalogue details need completion'});
+    }
     if (entry.status === "retired") {
       problems.push({ course: entry.code, problem: "course is retired" });
     }
@@ -115,6 +122,8 @@ export async function loadCurriculum(db, versionId) {
       e.year_of_study as "yearOfStudy",
       e.term,
       e.requirement_type as "requirementType",
+      e.legacy_source_ref as "legacySourceRef",
+      to_char(c.effective_from,'YYYY-MM-DD') as "effectiveFrom",
       coalesce(
         (select json_agg(cp.prerequisite_course_id) from course_prerequisites cp where cp.course_id = c.id),
         '[]'::json
@@ -219,11 +228,15 @@ export function createCurriculumModule(pool) {
             );
           }
         }
+        const effectiveFrom = input.effectiveFrom === undefined || input.effectiveFrom === '' ? before.effectiveFrom : parseEffectiveDate(input.effectiveFrom);
+        if (input.effectiveFrom !== undefined && before.status !== 'draft') throw requestError(400,'Effective dates can only be completed on draft courses.');
+        const credits = input.credits ?? before.credits, level = input.level ?? before.level;
+        const status = before.status === 'draft' && credits > 0 && Number.isInteger(level) && level >= 1 && level <= 8 && effectiveFrom ? 'active' : before.status;
         await client.query(
           `update courses
-           set title = $1, credits = $2, level = $3, updated_at = now()
+           set title = $1, credits = $2, level = $3, effective_from=$5, status=$6, updated_at = now()
            where id = $4`,
-          [input.title ?? before.title, input.credits ?? before.credits, input.level ?? before.level, courseId]
+          [input.title ?? before.title, credits, level, courseId, effectiveFrom, status]
         );
         const after = await findCourse(client, courseId);
         await insertAudit(client, {

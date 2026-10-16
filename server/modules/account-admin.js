@@ -27,7 +27,7 @@ export function createAccountAdminModule(pool) {
          order by lower(p.legal_name), a.email limit ${limit} offset ${offset}`,
         values
       )).rows;
-      const roles = (await pool.query("select code, name, risk from roles order by name")).rows;
+      const roles = (await pool.query("select code, name, risk from roles where active and is_assignable order by legacy_access_level desc nulls last,name")).rows;
       return { items: rows, total, limit, offset, roles };
     },
 

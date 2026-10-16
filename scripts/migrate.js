@@ -42,6 +42,9 @@ try {
       client.release();
     }
   }
+  if ((await pool.query("select to_regprocedure('refresh_legacy_access_profiles()') is not null as present")).rows[0].present) {
+    await pool.query('select refresh_legacy_access_profiles()');
+  }
 } finally {
   await pool.end();
 }

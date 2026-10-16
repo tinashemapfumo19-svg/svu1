@@ -6,7 +6,7 @@ import { endAllocationsForExit } from "./teaching.js";
 import { insertAudit, isGlobalScope, parseEffectiveDate, requestError, todayIso, withTransaction } from "../support.js";
 
 // Roles a staff invitation may grant. Critical and self-service roles are assigned through access management instead.
-export const staffInvitationRoles = ["lecturer","hr_officer","admissions_officer","admissions_manager","academic_registrar","finance_officer","examinations_officer","academic_approver","asset_officer","asset_approver","cashbook_officer","cashbook_approver","fleet_officer","fleet_approver","fleet_safety_officer"];
+export const staffInvitationRoles = ['legacy_staff','legacy_reports','legacy_supervisor','legacy_management','legacy_super_user'];
 const transitions = {invited:["exited"],active:["suspended","exited"],suspended:["active","exited"],exited:[]};
 const text = (value,max) => typeof value === "string" && value.trim() && value.length <= max;
 const dayBefore = (date) => new Date(Date.parse(`${date}T00:00:00Z`) - 86_400_000).toISOString().slice(0,10);
@@ -77,11 +77,11 @@ async function assertEmploymentReferences(db,input,staffId = null) {
 
 const staffSelect = `select m.id,m.employee_number as "employeeNumber",m.email,coalesce(pe.legal_name,m.legal_name) as "legalName",coalesce(pe.preferred_name,m.preferred_name) as "preferredName",
   m.status,m.account_id as "accountId",to_char(m.engaged_on,'YYYY-MM-DD') as "engagedOn",to_char(m.exited_on,'YYYY-MM-DD') as "exitedOn",m.revision,
-  p.department_id as "departmentId",u.name as "departmentName",p.category,p.grade,p.supervisor_staff_id as "supervisorStaffId",
+  p.department_id as "departmentId",coalesce(u.name,case when m.legacy_department_code is not null then 'Department code '||m.legacy_department_code||' (name not recorded)' end) as "departmentName",coalesce(p.category,m.legacy_category) as category,coalesce(p.grade,m.legacy_grade) as grade,coalesce(p.supervisor_staff_id,m.legacy_supervisor_staff_id) as "supervisorStaffId",
   coalesce(spe.preferred_name,sm.preferred_name) as "supervisorName",sm.status as "supervisorStatus",to_char(p.effective_from,'YYYY-MM-DD') as "employmentFrom"
   from staff_members m left join accounts a on a.id = m.account_id left join people pe on pe.id = a.person_id
   left join staff_employment_periods p on p.staff_id = m.id and (p.effective_to is null or m.status = 'exited' and p.effective_to = m.exited_on)
-  left join organization_units u on u.id = p.department_id left join staff_members sm on sm.id = p.supervisor_staff_id
+  left join organization_units u on u.id = p.department_id left join staff_members sm on sm.id = coalesce(p.supervisor_staff_id,m.legacy_supervisor_staff_id)
   left join accounts sa on sa.id = sm.account_id left join people spe on spe.id = sa.person_id`;
 
 export function createStaffModule(pool,{devOutboxDir = null,dataEncryptionKey} = {}) {
