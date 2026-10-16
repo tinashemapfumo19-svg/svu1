@@ -1,0 +1,194 @@
+{
+  "runId": "2026-10-12T22-48-28-951Z",
+  "baseUrl": "http://127.0.0.1:4182",
+  "startedAt": "2026-10-12T22:48:28.953Z",
+  "gates": [
+    {
+      "id": "schema_and_runtime",
+      "status": "passed",
+      "summary": "Health check reached the Node server and PostgreSQL.",
+      "details": {
+        "status": "ok",
+        "database": "ok"
+      }
+    },
+    {
+      "id": "admin_authentication",
+      "status": "passed",
+      "summary": "Seeded system administrator can authenticate.",
+      "details": {
+        "accountId": "acct_system_admin",
+        "sessionId": "ses_2c729320-e963-47fa-9960-f5b1e16748e4"
+      }
+    },
+    {
+      "id": "invite_user",
+      "status": "passed",
+      "summary": "System administrator created a scoped invitation.",
+      "details": {
+        "invitationId": "inv_1012aeac-8c04-475a-82ac-87f8f12c376b",
+        "email": "phase1.demo.1791845308953@southvalley.test",
+        "roleCode": "admissions_officer",
+        "scope": {
+          "programmeCodes": [
+            "BSC-IS"
+          ],
+          "intakeIds": [
+            "intake_2027_feb"
+          ]
+        }
+      }
+    },
+    {
+      "id": "activate_user",
+      "status": "passed",
+      "summary": "Invited staff account activated with a password hash.",
+      "details": {
+        "accountId": "acct_32de3b2c-9069-41ca-a99d-b57695f8b18a",
+        "email": "phase1.demo.1791845308953@southvalley.test",
+        "status": "active"
+      }
+    },
+    {
+      "id": "login_user",
+      "status": "passed",
+      "summary": "Activated staff account can create a bearer session.",
+      "details": {
+        "accountId": "acct_32de3b2c-9069-41ca-a99d-b57695f8b18a",
+        "sessionId": "ses_df29dc76-8a30-402c-a5f1-c4a10050b27e"
+      }
+    },
+    {
+      "id": "manage_account_lifecycle",
+      "status": "passed",
+      "summary": "Admin listed sessions, suspended the account, revoked sessions, blocked login, and reactivated it.",
+      "details": {
+        "accountId": "acct_32de3b2c-9069-41ca-a99d-b57695f8b18a",
+        "sessionsObserved": 1,
+        "revokedSessions": 1,
+        "deniedWhileSuspended": 401,
+        "statusAfterReactivation": "active"
+      }
+    },
+    {
+      "id": "assign_scoped_role",
+      "status": "passed",
+      "summary": "Admin assigned admissions role limited to the pilot programme and intake.",
+      "details": {
+        "assignmentId": "ra_e146e960-091d-451c-8b0d-2731c1942b29",
+        "roleCode": "admissions_officer",
+        "scope": {
+          "programmeCodes": [
+            "BSC-IS"
+          ],
+          "intakeIds": [
+            "intake_2027_feb"
+          ]
+        }
+      }
+    },
+    {
+      "id": "protect_master_data",
+      "status": "passed",
+      "summary": "Admin created protected programme and intake master data with audit evidence.",
+      "details": {
+        "programmeId": "prog_6355f6d4-d416-4049-af6a-7c693bc9e970",
+        "programmeCode": "P1-DEMO-1791845309859",
+        "intakeId": "intake_6e152c6d-662a-4207-9129-b9e6bec78c20",
+        "intakeCapacity": 30
+      }
+    },
+    {
+      "id": "transition_workflow",
+      "status": "passed",
+      "summary": "Scoped admissions officer walked a guarded application workflow to Decision; illegal moves and decisions without authority were refused.",
+      "details": {
+        "workflowId": "wfi_7ac0dab3-f400-47e2-989b-bd1bcc661bda",
+        "definition": "admissions_application v3",
+        "officerReachedState": "Decision",
+        "illegalMoveStatus": 409,
+        "officerDecisionStatus": 403,
+        "finalState": "Offer issued",
+        "subjectId": "app_phase1_demo_1791845309913"
+      }
+    },
+    {
+      "id": "manage_task",
+      "status": "passed",
+      "summary": "Scoped admissions officer assigned, handed off, and completed the pilot task.",
+      "details": {
+        "taskId": "task_review_mock_application",
+        "assignedStatus": "assigned",
+        "handoffQueue": "admissions.decision",
+        "completedStatus": "completed"
+      }
+    },
+    {
+      "id": "create_document_metadata",
+      "status": "passed",
+      "summary": "Scoped admissions officer created document metadata for the pilot application.",
+      "details": {
+        "documentId": "doc_47459f33-3439-4dae-ac6d-369f1750a1d6",
+        "ownerId": "app_mock_001",
+        "storageKey": "private/applications/app_mock_001/phase1-demo-2026-10-12T22-48-28-951Z.json"
+      }
+    },
+    {
+      "id": "preview_notification",
+      "status": "passed",
+      "summary": "Notification template rendered through the provider-neutral preview endpoint.",
+      "details": {
+        "channel": "email",
+        "subject": "Application received"
+      }
+    },
+    {
+      "id": "queue_notification",
+      "status": "passed",
+      "summary": "Notification send stub queued a provider-neutral message.",
+      "details": {
+        "notificationId": "not_034edf44-c215-4ed5-bfd6-d888d4c09440",
+        "status": "queued"
+      }
+    },
+    {
+      "id": "audit_evidence",
+      "status": "passed",
+      "summary": "Audit log contains evidence for identity, role, workflow, document, and notification events.",
+      "details": {
+        "observedActions": [
+          "identity.invitation.created",
+          "identity.account.activated",
+          "identity.session.created",
+          "identity.account.suspended",
+          "identity.account.reactivated",
+          "access.role_assignment.created",
+          "master_data.programme.created",
+          "master_data.intake.created",
+          "workflow.instance.created",
+          "workflow.transitioned",
+          "task.assigned",
+          "task.handed_off",
+          "task.completed",
+          "document.created",
+          "notification.queued"
+        ],
+        "auditEventsReturned": 50
+      }
+    }
+  ],
+  "artifacts": {
+    "foundationStatusCounts": {
+      "people": 25,
+      "roles": 36,
+      "permissions": 127,
+      "rolePermissions": 341,
+      "auditEvents": 534,
+      "tasks": 5,
+      "workflowInstances": 18,
+      "programmes": 5
+    }
+  },
+  "completedAt": "2026-10-12T22:48:30.469Z",
+  "status": "passed"
+}

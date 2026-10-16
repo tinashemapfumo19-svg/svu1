@@ -1,0 +1,26 @@
+.academic-setup { min-width: 0; }
+.academic-setup .academic-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.academic-setup .academic-tabs button[aria-selected="true"] { background: #17654b; color: #fff; border-color: #17654b; }
+.academic-setup .academic-layout { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr); gap: 24px; }
+.academic-setup .academic-list { display: flex; flex-direction: column; gap: 8px; }
+.academic-setup .academic-list button { white-space: normal; overflow-wrap: anywhere; text-align: left; }
+.academic-setup .academic-list .is-selected { border-color: #17654b; background: #edf7f2; }
+.academic-setup .academic-detail { min-width: 0; }
+.academic-setup .academic-detail h2 { font-size: 22px; }
+.academic-setup .academic-detail h3 { font-size: 18px; margin-top: 24px; }
+.academic-setup .academic-table { overflow-x: auto; margin: 16px 0; }
+.academic-setup table { width: 100%; border-collapse: collapse; }
+.academic-setup th, .academic-setup td { text-align: left; padding: 10px; border-bottom: 1px solid #d4dce2; overflow-wrap: anywhere; }
+.academic-setup .academic-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; margin: 16px 0; }
+.academic-setup input, .academic-setup select { min-width: 0; max-width: 100%; }
+.academic-setup [data-academic-rows], .academic-setup form > h3 { grid-column: 1 / -1; }
+.academic-sample { border-block-start: 1px solid var(--svu-border); padding-block: 20px; min-width: 0; }
+.academic-sample > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.academic-sample > header h3 { margin: 0; }
+.academic-sample [data-academic-rows="result"] { margin-block: 16px; }
+.academic-setup [data-academic-row] { gap: 12px; margin-block: 12px; }
+.academic-requirement-document { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; }
+@media (max-width: 760px) {
+  .academic-setup .academic-layout { grid-template-columns: minmax(0, 1fr); }
+  .academic-setup .academic-list { max-height: 260px; overflow-y: auto; }
+}

@@ -1,0 +1,283 @@
+{
+  "generatedAt": "2026-10-01T09:35:46.216Z",
+  "integration": {
+    "status": "passed",
+    "database": "svu_rebuild_it_1790847346344",
+    "teardown": "database dropped",
+    "steps": [
+      {
+        "name": "migrate",
+        "status": "passed"
+      },
+      {
+        "name": "seed",
+        "status": "passed"
+      },
+      {
+        "name": "server",
+        "status": "passed"
+      },
+      {
+        "name": "unit tests",
+        "status": "passed"
+      },
+      {
+        "name": "smoke:all",
+        "status": "passed"
+      }
+    ],
+    "smoke": {
+      "passed": 17,
+      "failed": 0
+    }
+  },
+  "exitGates": [
+    {
+      "gate": "A user can be invited, authenticated, authorized, suspended, and audited securely.",
+      "status": "passed",
+      "evidence": [
+        {
+          "name": "demo:phase1",
+          "status": "passed"
+        },
+        {
+          "name": "smoke:identity",
+          "status": "passed"
+        },
+        {
+          "name": "smoke:identity-hardening",
+          "status": "passed"
+        },
+        {
+          "name": "smoke:sessions",
+          "status": "passed"
+        },
+        {
+          "name": "smoke:mfa",
+          "status": "passed"
+        },
+        {
+          "name": "smoke:authz",
+          "status": "passed"
+        },
+        {
+          "name": "smoke:audit",
+          "status": "passed"
+        }
+      ],
+      "notes": [
+        "Tokens are stored as SHA-256 digests; passwords use scrypt; TOTP seeds are AES-256-GCM encrypted.",
+        "Login throttling, password recovery, TOTP MFA with recovery codes, and admin MFA reset are covered.",
+        "The `privileged` MFA policy (the production default) was checked manually, not in CI, because the shared smoke admin signs in without MFA."
+      ]
+    },
+    {
+      "gate": "Master data changes are effective-dated and protected by permission.",
+      "status": "passed",
+      "evidence": [
+        {
+          "name": "smoke:master-data",
+          "status": "passed"
+        },
+        {
+          "name": "smoke:master-data-lifecycle",
+          "status": "passed"
+        },
+        {
+          "name": "smoke:academic-calendar",
+          "status": "passed"
+        },
+        {
+          "name": "smoke:reference-data",
+          "status": "passed"
+        },
+        {
+          "name": "smoke:curriculum",
+          "status": "passed"
+        },
+        {
+          "name": "smoke:grading",
+          "status": "passed"
+        }
+      ],
+      "notes": [
+        "Organisation units, programme versions, curricula, academic periods, reference values, grading schemes, and GPA rule sets are effective-dated, audited with before/after snapshots, and need `master_data.publish`.",
+        "Maker-checker: the drafter cannot publish programme versions, grading schemes, or GPA rule sets.",
+        "Seeded grading bands and GPA rules are placeholders pending Academic Board approval."
+      ]
+    },
+    {
+      "gate": "Workflows, documents, and notifications are reusable by business modules.",
+      "status": "passed",
+      "evidence": [
+        {
+          "name": "smoke:workflow",
+          "status": "passed"
+        },
+        {
+          "name": "smoke:tasks",
+          "status": "passed"
+        },
+        {
+          "name": "smoke:documents",
+          "status": "passed"
+        },
+        {
+          "name": "smoke:service-reads",
+          "status": "passed"
+        }
+      ],
+      "notes": [
+        "Workflows are versioned definitions with guarded transitions, decision authority, and terminal states.",
+        "Documents go through signed upload, size, checksum, and file-signature checks, scan, review, and audited signed download.",
+        "Malware scanning is recorded through an API; no scanner engine is integrated yet. Notifications queue but are not delivered (ADR-005)."
+      ]
+    },
+    {
+      "gate": "Environments and schema can be recreated from version-controlled automation.",
+      "status": "passed",
+      "evidence": [],
+      "notes": [
+        "`npm run test:integration` builds a throwaway database from migrations, seeds it, and runs every smoke script.",
+        "CI workflow exists (`.github/workflows/ci.yml`) but has not run on a hosted runner because this workspace is not yet a git repository.",
+        "Staging and production environments do not exist yet (ADR-007 hosting is open)."
+      ]
+    },
+    {
+      "gate": "Backup restoration and deployment rollback have been demonstrated.",
+      "status": "partial",
+      "evidence": [],
+      "notes": [
+        "`npm run backup:rehearse` dumps, restores into a separate database, and verifies foundation counts."
+      ],
+      "partial": "Backup restore is rehearsed; deployment rollback cannot be shown until a deployment target exists (ADR-007)."
+    }
+  ],
+  "demoEvidence": {
+    "status": "passed",
+    "completedAt": "2026-10-01T09:36:11.300Z",
+    "gates": 14
+  },
+  "backupEvidence": {
+    "status": "passed",
+    "completedAt": "2026-10-01T09:35:06.027Z",
+    "checks": [
+      "dump_created",
+      "rehearsal_database_dropped",
+      "rehearsal_database_created",
+      "dump_restored",
+      "restore_verified"
+    ]
+  },
+  "migrations": [
+    "001_phase1_foundation.sql",
+    "002_identity_activation_sessions.sql",
+    "003_phase1_status_refresh.sql",
+    "004_role_permissions.sql",
+    "005_resource_scopes.sql",
+    "005a_baseline_roles_and_permissions.sql",
+    "006_identity_management_permission.sql",
+    "007_document_upload_requests.sql",
+    "008_master_data_effective_dating.sql",
+    "009_academic_calendar.sql",
+    "010_reference_lists.sql",
+    "011_workflow_guards.sql",
+    "012_token_digests.sql",
+    "013_login_throttling_and_recovery.sql",
+    "014_mfa.sql",
+    "015_course_catalogue_and_curriculum.sql",
+    "016_grading_and_gpa.sql",
+    "017_academic_registrar_role.sql",
+    "018_document_reviews.sql"
+  ],
+  "openDecisions": [
+    {
+      "id": "ADR-001",
+      "decision": "Application architecture",
+      "recommendation": "Modular monolith with clear internal modules",
+      "status": "Proposed",
+      "owner": "IT/Product",
+      "blocks": "Backend scaffold, deployment, testing"
+    },
+    {
+      "id": "ADR-003",
+      "decision": "Identity provider",
+      "recommendation": "Build foundation-compatible identity now; allow future external IdP integration",
+      "status": "Open",
+      "owner": "IT/Security",
+      "blocks": "Account activation, MFA, recovery"
+    },
+    {
+      "id": "ADR-004",
+      "decision": "Document storage",
+      "recommendation": "Private object/file storage with DB metadata and short-lived access URLs",
+      "status": "Proposed",
+      "owner": "IT/Security",
+      "blocks": "Upload workflow, application documents"
+    },
+    {
+      "id": "ADR-005",
+      "decision": "Notification providers",
+      "recommendation": "Provider-agnostic email/SMS adapters, in-app inbox first",
+      "status": "Proposed",
+      "owner": "IT/Comms",
+      "blocks": "Admissions receipts, password recovery"
+    },
+    {
+      "id": "ADR-006",
+      "decision": "Runtime stack",
+      "recommendation": "Dependency-free Node scaffold for Phase 1 prototype; final production stack still requires approval",
+      "status": "Proposed",
+      "owner": "IT",
+      "blocks": "Production scaffold and CI"
+    },
+    {
+      "id": "ADR-007",
+      "decision": "Hosting model",
+      "recommendation": "Confirm on-prem, cloud, or hybrid constraints",
+      "status": "Open",
+      "owner": "Management/IT",
+      "blocks": "Deployment, backups, monitoring"
+    },
+    {
+      "id": "ADR-008",
+      "decision": "LMS boundary",
+      "recommendation": "Keep Phase 1 foundation neutral; decide before Stage 6",
+      "status": "Deferred",
+      "owner": "Academic/IT",
+      "blocks": "Learning module integration"
+    },
+    {
+      "id": "ADR-009",
+      "decision": "Accounting boundary",
+      "recommendation": "Keep Phase 1 finance-neutral; decide before Stage 4",
+      "status": "Deferred",
+      "owner": "Finance/IT",
+      "blocks": "Ledger integration"
+    },
+    {
+      "id": "ADR-010",
+      "decision": "Legacy archive exposure",
+      "recommendation": "Legacy archive remains non-deployable read-only reference",
+      "status": "Proposed",
+      "owner": "IT/Security",
+      "blocks": "Security containment"
+    },
+    {
+      "id": "ADR-011",
+      "decision": "Audit retention",
+      "recommendation": "Define retention by legal and institutional policy",
+      "status": "Open",
+      "owner": "Management/Legal",
+      "blocks": "Audit storage, archive policy"
+    },
+    {
+      "id": "ADR-012",
+      "decision": "Sensitive profile fields",
+      "recommendation": "Restrict disability, medical, and protected data with field-level policy",
+      "status": "Proposed",
+      "owner": "Registry/Legal",
+      "blocks": "Student profile model"
+    }
+  ]
+}

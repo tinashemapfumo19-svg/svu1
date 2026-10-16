@@ -1,0 +1,231 @@
+{
+  "mappingSha256": "83d472f9473c006ca0b96584bad32c63c8a499ecb3a7b96a6045f1f4c46f94b1",
+  "icons": [
+    {
+      "file": "emoticon_smile.png",
+      "aliases": [
+        ":-)",
+        "^_^",
+        ":)"
+      ],
+      "sha256": "89667f9b1d050caa8324f06dc8d62878c9a8798d86feeae1b6d425946d08a638",
+      "bytes": 795,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "emoticon_evilgrin.png",
+      "aliases": [
+        ">("
+      ],
+      "sha256": "90c8c5e8ba9ba1c2cb4e3c1cbf748eb1b842cfab88ddb71d9855a27780003d19",
+      "bytes": 755,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "emoticon_surprised.png",
+      "aliases": [
+        ":S",
+        ":s",
+        ":-S",
+        ":-s",
+        ":-/"
+      ],
+      "sha256": "5268bad302370bca63d1013321110bb5a16db6299086ae7bdd446f9723b332ee",
+      "bytes": 779,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "emoticon_grin.png",
+      "aliases": [
+        ":-D",
+        ":D"
+      ],
+      "sha256": "d70055615dfc32a1abb535cab0b16613bd198c8bbe3cbc29204b6f40242b9607",
+      "bytes": 757,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "emoticon_unhappy.png",
+      "aliases": [
+        ":'(",
+        ":-(",
+        ":o(",
+        ":-<",
+        ":("
+      ],
+      "sha256": "cdd34729b460ecc21244790d4d124ea27aa461a7d9d37b348bc0a6c1b12e6ff2",
+      "bytes": 790,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "emoticon_happy.png",
+      "aliases": [
+        ":lol:"
+      ],
+      "sha256": "d2a1420bb3775ca2f47c1ff4e2dc44007d8f3d339e5d4f0fc5ec3bc00109a21d",
+      "bytes": 748,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "emoticon_waii.png",
+      "aliases": [
+        ":{}",
+        ":-{}",
+        ":razz:",
+        ":}",
+        ":-}"
+      ],
+      "sha256": "45968e92591f93a6ec3b6c71845e076518a8d1ada5507e438ab66114d6f855ec",
+      "bytes": 825,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "emoticon_wink.png",
+      "aliases": [
+        ";-)",
+        ";o)",
+        ";)"
+      ],
+      "sha256": "f754fc2285aeb5c6790f288ebde40579ed783b31250488bf46bca8b5675f6a90",
+      "bytes": 751,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "emoticon_tongue.png",
+      "aliases": [
+        ":P",
+        ":-P",
+        ":-p",
+        ":p"
+      ],
+      "sha256": "a4d37899739987fc8f22fc09abf09829722a29fa81f48a1b9afe9f8ac5353bae",
+      "bytes": 796,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "weather_rain.png",
+      "aliases": [
+        "///",
+        "\\\\\\",
+        "|||",
+        ":rain:",
+        ":drizzle:"
+      ],
+      "sha256": "7bc8dc9a30c61711cc61664fc9b7345567eba69e3e9eb6d5c16c0120ceac3f0a",
+      "bytes": 718,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "weather_snow.png",
+      "aliases": [
+        ":***:"
+      ],
+      "sha256": "6d89fa50ec961bf493720e14038205c0f8b81f9d9f117dddbce17bfc87d06309",
+      "bytes": 558,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "weather_sun.png",
+      "aliases": [
+        ">O<"
+      ],
+      "sha256": "6ef6555e5c227738d6c5421b83f34264ed7f28226ef04d51f2c2a518e4da3442",
+      "bytes": 704,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "weather_clouds.png",
+      "aliases": [
+        ":\"\"\":",
+        ":cloud:",
+        ":clouds:"
+      ],
+      "sha256": "688a37e0972ebae1e1fa0ced9425c8c35d3127c6ac75a3eced308fe2b611a732",
+      "bytes": 646,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "weather_cloudy.png",
+      "aliases": [
+        ":\"O\":",
+        ":cloudly:"
+      ],
+      "sha256": "1d1fa00379f7c649306bb811aedf7d274fffb08e327099a5044496264f1e09b5",
+      "bytes": 770,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "weather_lightning.png",
+      "aliases": [
+        ":$:"
+      ],
+      "sha256": "ce80f15e04291c0498a3712d5da88599557c2a79b28253aece7448de27875bc5",
+      "bytes": 718,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "arrow_right.png",
+      "aliases": [
+        "=>",
+        "->",
+        "-->",
+        "==>",
+        ">>>"
+      ],
+      "sha256": "57a2d575c5f18cf4349cb89244edebc62f8a6b041eb972365d04d61f71934c3a",
+      "bytes": 454,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "arrow_left.png",
+      "aliases": [
+        "<=",
+        "<-",
+        "<--",
+        "<==",
+        "<<<"
+      ],
+      "sha256": "25ead74f340d5d024a081a5c6d08b4eb79c4344ec359f41537e9c35a2444d679",
+      "bytes": 461,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "exclamation.png",
+      "aliases": [
+        ":!:"
+      ],
+      "sha256": "3543544d88b5c1d7a82592d11193d70bc92ead71f82dba3f19146b0c7289c1af",
+      "bytes": 800,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "file": "lightbulb.png",
+      "aliases": [
+        "*)",
+        "0="
+      ],
+      "sha256": "9fbe46f0673b7feeee0bef6ba10f3b411a5cc457b406377a400fade8dbbc3ba5",
+      "bytes": 856,
+      "width": 16,
+      "height": 16
+    }
+  ]
+}

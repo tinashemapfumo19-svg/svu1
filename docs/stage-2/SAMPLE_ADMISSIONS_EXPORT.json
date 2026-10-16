@@ -1,0 +1,26 @@
+{
+  "source": "sample-admissions-export",
+  "totals": { "applications": 1, "documents": 1, "documentBytes": 15 },
+  "applications": [
+    {
+      "legacyId": "LEGACY-A001",
+      "accountId": "REPLACE_WITH_MAPPED_APPLICANT_ACCOUNT_ID",
+      "intakeId": "REPLACE_WITH_MAPPED_INTAKE_ID",
+      "state": "Submitted",
+      "referenceNumber": "LEGACY-2027-000001",
+      "studyModeCode": "FULL_TIME",
+      "answers": { "applicantCategory": "standard", "personalStatement": "Sample migration record." },
+      "messages": ["Sample historical applicant communication."],
+      "documents": [
+        {
+          "legacyId": "LEGACY-D001",
+          "documentType": "prior_transcript",
+          "fileName": "sample-transcript.pdf",
+          "contentType": "application/pdf",
+          "contentBase64": "JVBERi0xLjQKJSVFT0YK",
+          "checksum": "14bcd090baf31edba64e9cbd8cdfc15f943344aa72cb3675ad8e91bfcbce03ad"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "startedAt": "2026-10-01T09:35:03.587Z",
+  "containerName": "svu-postgres",
+  "sourceDatabase": "svu_rebuild",
+  "rehearsalDatabase": "svu_rebuild_restore_rehearsal",
+  "checks": [
+    {"id":"dump_created","status":"passed","summary":"PostgreSQL dump created from source database.","details":{"bytes":181262}},
+    {"id":"rehearsal_database_dropped","status":"passed","summary":"Previous rehearsal database removed if it existed.","details":{}},
+    {"id":"rehearsal_database_created","status":"passed","summary":"Clean rehearsal database created.","details":{}},
+    {"id":"dump_restored","status":"passed","summary":"Dump restored into rehearsal database.","details":{}},
+    {"id":"restore_verified","status":"passed","summary":"Restored database contains expected foundation data.","details":{"people":8,"auditEvents":176,"programmes":5,"rolePermissions":35}}
+  ],
+  "completedAt":"2026-10-01T09:35:06.027Z",
+  "status":"passed"
+}

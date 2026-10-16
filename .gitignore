@@ -1,0 +1,12 @@
+data/*.json
+*.log
+*.pid
+node_modules/
+test-results/
+playwright-report/
+data/svu_rebuild_it_*-outbox/
+data/svu_rebuild_it_*-storage/
+data/dev-outbox/
+data/dev-storage/
+data/*
+_legacy_php_system/

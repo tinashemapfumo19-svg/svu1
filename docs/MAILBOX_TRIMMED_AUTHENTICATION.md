@@ -1,0 +1,29 @@
+# Preserved Mailbox Authentication - 2026-10-11
+
+## Final Verified Milestone
+
+Corrected `svu_rebuild_it_1791675598315` passed full units, all 12 selected desktop/mobile cases and all 22 smoke/demo checks. Separate units passed 573 without failures/skips/cancellation (25262.0635 ms, terminal session 1059). The earlier 46-case browser selection passed on identical production sources before the two unit assertion corrections; its overall run remains failed, not relabelled green. All four owned red/focused/first-broad/corrected databases are independently absent; corrected launcher 53660 terminal, runner 19540 absent, error log empty, no isolated listener, `.last-run.json` passed/no failures. All 516 sources unchanged/current SHA-256 `f457512f8e6ca8fa211bb2daaf12e31e7f13e19416292512c33fdc3fd404c65c`.
+
+Stopped only owned PID 14672 after exact start/listener checks. New owned PID 13556/start milliseconds 1791675767512 serves http://127.0.0.1:4173 with enrolled MFA/external mail disabled; saved `data/mailbox-trim-dev.out.log` / error log. Working metadata still has 191 active accounts/noncanonical zero and a unique/valid/ready canonical index. No working migration/reseed, email/person/account/password/grant rewrite, duplicate fixture, index bypass or import occurred. Only ordinary login/session/authentication/read metadata changes are expected. These results supersede pending verification/cleanup/restart notes below; the complete coverage goal remains active.
+
+## Contract And Scope
+
+Subsequent verified registration/staff canonical matching is documented in `MAILBOX_REGISTRATION_STAFF.md`; earlier registration/staff-pending notes here are historical. Sharing/private-room matching remains open.
+
+Final working checks: health 200/login 201; authenticated identity/private preferences/conversations/changes and room workspace/changes 200/no-store; anonymous private/room changes 401/no-store. All seventeen messaging tables and room-role appointments remain zero; new error log empty. These are default working-account runtime checks; padded-address and collision behavior is certified only by the isolated native fixtures above, not a working identity mutation.
+
+Login and password recovery match accounts using `lower(btrim(email))`, consistent with migration 103, while still requiring exactly one account across all statuses. No account email, ID, credential, status or grant is rewritten. Recovery supplies the normalized matched input as the destination of its encrypted notification snapshot; account ID remains the recipient authority. The notification queue still validates the destination. This is not a global address rewrite, delivery acknowledgement or historical identity-resolution policy.
+
+Registration, staff appointment linkage, student sharing and private/room invitation matching remain independent open work. This stage does not certify those consumers, historical imports or the complete legacy coverage objective. User message text remains preserved without automatic filtering, and room identity remains account names without presence.
+
+## Native Failure And Proof
+
+The guarded disposable fixture creates an account through native invitation/activation, then retains a unique uppercase, space-padded stored mailbox using controlled SQL. The previous lookup fails native login with 401 instead of 201 in all four desktop/mobile login/recovery cases in `svu_rebuild_it_1791674947106`. That run fails at positive login, not independently at recovery; no stronger red recovery claim is made. Saved `data/mailbox-trim-red-summary.log` reports database teardown and unchanged 516-source SHA-256 `1d5d94c46033a89dbf53d510625a66ed637c1907e56d963252591e1c4b53608f`. Launcher 39057 is terminal and runner 17072 absent.
+
+The extended fixture requires successful normalized-input login to the original ID, a recovery token for that ID and an encrypted recovery destination equal to its canonical mailbox. It hashes the complete account excluding expected login/update timestamps before and after positive operations, and verifies the original padded value is preserved. It then models a pre-migration collision by temporarily dropping the canonical index only in the owned database. Both active/active and active/suspended case/space collisions must refuse account selection; full retained row hashes and existing ID-bound sessions/token status stay checked. Cleanup restores the second account and canonical index. No working email change, index bypass, duplicate fixture or import is authorized.
+
+Focused uniqueness/creation/authentication verification runs as owned PID 21312/start milliseconds 1791675007155, launcher 63252; saved `data/mailbox-trim-focused-summary.log` / error log and output. Broad verification, independent database absence and working cold restart remain pending. No final outcome is implied by a live runner.
+
+The focused run subsequently passed all 12 cases with unchanged 516-source SHA-256 `bb870d0f269ad10a80625b0e6e6ca7df2a3c446b347c08d7aea43860893e954a`. The first broader run `svu_rebuild_it_1791675097344` passed all 46 selected desktop/mobile cases and all 22 smoke/demo checks, but is correctly marked failed: its full units were 571/573 because two query assertions still required the old untrimmed lookup. This is not an all-green broad certificate. Only those two unit regex assertions were changed to require `lower(btrim(email))`; ambiguity, no-write and generic-response assertions remain. Eight focused auth/notification units then passed (1098.2217 ms).
+
+Corrected verification runs as owned PID 19540/start milliseconds 1791675597991, launcher 53660, full units plus 12 native auth/creation/uniqueness cases and all smoke/demo checks; saved `data/mailbox-trim-corrected-summary.log` / error log and output. Its selection is not the earlier 46-case selection. Final source/cleanup/runtime proof remains pending.

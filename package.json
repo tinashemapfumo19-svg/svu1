@@ -1,0 +1,63 @@
+{
+  "name": "svu-rebuild",
+  "version": "0.1.0",
+  "private": true,
+  "description": "South Valley University rebuild foundation scaffold.",
+  "type": "module",
+  "scripts": {
+    "dev": "node server/server.js",
+    "migrate": "node scripts/migrate.js",
+    "seed": "node scripts/seed-postgres.js",
+    "seed:json": "node scripts/seed.js",
+    "reference:load": "node scripts/load-reference-data.js",
+    "backup:rehearse": "node scripts/rehearse-backup-restore.js",
+    "demo:phase1": "node scripts/demo-phase1.js",
+    "demo:check": "node scripts/check-demo-logins.js",
+    "demo:student": "node scripts/seed-active-student.js",
+    "demo:walkthrough": "node scripts/seed-walkthrough.js",
+    "smoke:all": "node scripts/smoke-all.js",
+    "smoke:academic-calendar": "node scripts/smoke-academic-calendar.js",
+    "smoke:admissions-decisions": "node scripts/smoke-admissions-decisions.js",
+    "smoke:admissions-onboarding": "node scripts/smoke-admissions-onboarding.js",
+    "smoke:admissions-review": "node scripts/smoke-admissions-review.js",
+    "smoke:application-journey": "node scripts/smoke-application-journey.js",
+    "smoke:audit": "node scripts/smoke-audit.js",
+    "smoke:curriculum": "node scripts/smoke-curriculum.js",
+    "smoke:documents": "node scripts/smoke-documents.js",
+    "smoke:authz": "node scripts/smoke-authz.js",
+    "smoke:grading": "node scripts/smoke-grading.js",
+    "smoke:identity": "node scripts/smoke-identity-admin.js",
+    "smoke:identity-hardening": "node scripts/smoke-identity-hardening.js",
+    "smoke:master-data": "node scripts/smoke-master-data.js",
+    "smoke:master-data-lifecycle": "node scripts/smoke-master-data-lifecycle.js",
+    "smoke:mfa": "node scripts/smoke-mfa.js",
+    "smoke:reference-data": "node scripts/smoke-reference-data.js",
+    "smoke:service-reads": "node scripts/smoke-service-reads.js",
+    "smoke:sessions": "node scripts/smoke-sessions.js",
+    "smoke:student-conversion": "node scripts/smoke-student-conversion.js",
+    "smoke:tasks": "node scripts/smoke-tasks.js",
+    "smoke:workflow": "node scripts/smoke-workflow.js",
+    "test": "node --test",
+    "test:integration": "node scripts/integration.js",
+    "test:browser": "node scripts/integration.js --browser",
+    "admissions:migrate": "node scripts/admissions-migrate.js",
+    "legacy:preview": "node scripts/legacy-dump-preview.js",
+    "finance:opening-balances": "node scripts/finance-opening-balances.js",
+    "results:validate": "node scripts/results-export.js",
+    "signoff:pack": "node scripts/build-signoff-pack.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.133.0",
+    "lucide": "1.55.0",
+    "pg": "^8.23.1",
+    "qrcode": "1.5.4",
+    "svix": "^2.8.0",
+    "web-push": "3.6.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  }
+}

@@ -1,0 +1,21 @@
+Silk icons
+
+Creator: Mark James
+Original source: http://www.famfamfam.com/lab/icons/silk/
+Author repository: https://github.com/markjames/famfamfam-silk-icons
+PHPFreeChat port: Robin Monks
+License: Creative Commons Attribution 2.5 Generic (CC BY 2.5)
+License link: https://creativecommons.org/licenses/by/2.5/
+Legal code: https://creativecommons.org/licenses/by/2.5/legalcode.en
+
+The 19 PNG images in this directory are unchanged copies of the supplied
+PHPFreeChat default smiley catalogue. No image was modified. This use does
+not imply endorsement by Mark James, Robin Monks or Creative Commons.
+Original mapping and license annotation: theme.txt (retained in this directory).
+Individual file checksums, dimensions and aliases: catalogue.json.
+Native source inventory and verification: docs/CHAT_SMILEYS.md.
+
+This notice applies to these image assets, not to unrelated legacy themes,
+scripts, fonts or records. The supplied theme.txt declares these icons
+under CC BY 2.5; the author's repository also identifies the Silk icon set
+and license. The license is not a warranty of other permissions.

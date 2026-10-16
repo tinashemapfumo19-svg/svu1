@@ -1,0 +1,250 @@
+/* Student experience on the SVU UI Standard (docs/SVU_UI_STANDARD.md). Components come from svu-ui.css;
+   this file applies the shell, layout and the standard control treatment to adapter-rendered content in
+   student mode. No values outside the standard tokens. */
+
+/* ---------- Page and shell ---------- */
+.student-mode { background: var(--svu-bg-page); color: var(--svu-text-primary); font-family: var(--svu-font); font-size: 14px; line-height: 21px; letter-spacing: 0; }
+.student-mode .page-container { max-width: 1280px; padding-top: 0; }
+.student-mode .nav-links a[data-route="messages"] { display: none; }
+
+.student-experience { display: grid; gap: var(--svu-space-6); padding: var(--svu-space-2) 0 var(--svu-space-11); min-width: 0; overflow-wrap: break-word; }
+.student-experience > * { min-width: 0; }
+.student-controls { display: grid; gap: var(--svu-space-6); min-width: 0; }
+
+/* Secondary navigation band. */
+.student-local-nav { display: flex; align-items: stretch; gap: var(--svu-space-6); min-height: 50px; border-bottom: 1px solid var(--svu-border); overflow-x: auto; scrollbar-width: none; }
+.student-local-nav::-webkit-scrollbar { display: none; }
+.student-local-nav a { display: inline-flex; align-items: center; padding: 0 2px; white-space: nowrap; font-size: 14px; font-weight: 550; color: var(--svu-text-secondary-on-page); box-shadow: inset 0 -2px transparent; transition: color var(--svu-dur) var(--svu-ease), box-shadow var(--svu-dur) var(--svu-ease); }
+.student-local-nav a:hover { color: var(--svu-text-primary); }
+.student-local-nav a[aria-current] { color: var(--svu-text-primary); font-weight: 600; box-shadow: inset 0 -2px var(--svu-blue); }
+
+/* Context bar: one toolbar surface. */
+.student-context-disclosure { min-width: 0; }
+.student-experience .student-context-disclosure > summary { display: none; }
+.student-context { display: flex; flex-wrap: wrap; align-items: center; gap: var(--svu-space-4) var(--svu-space-6); padding: var(--svu-space-3) var(--svu-space-4); border: 1px solid var(--svu-border-hairline); border-radius: var(--svu-radius-card-sm); background: rgba(255,255,255,0.72); }
+.ui-context-field { display: grid; gap: 2px; min-width: 0; }
+.ui-context-field > span { font-size: 12px; line-height: 18px; font-weight: 500; color: var(--svu-text-secondary); }
+.student-experience .ui-context-field select { appearance: none; box-shadow: none !important; -webkit-appearance: none; min-width: 0; max-width: 420px; min-height: 28px; padding: 0 28px 0 0; border: 0; border-radius: 6px; background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 4px center / 16px; color: var(--svu-text-primary); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; text-overflow: ellipsis; }
+.ui-context-field select:hover { color: var(--svu-blue); }
+.student-number { margin-left: auto; font-size: 13px; color: var(--svu-text-secondary); font-variant-numeric: tabular-nums; }
+
+/* Notices and partial-load errors use the InlineAlert treatment. */
+.student-load-errors { display: grid; gap: var(--svu-space-2); }
+.student-load-errors p { margin: 0; }
+.student-load-errors .button { justify-self: start; }
+.student-loading { display: grid; gap: var(--svu-space-4); padding-top: var(--svu-space-8); color: var(--svu-text-secondary-on-page); }
+.student-loading div { height: 120px; border-radius: var(--svu-radius-card); background: linear-gradient(90deg, #EEF2F7, #F6F8FB, #EEF2F7); }
+
+/* Page header */
+.student-page-head.ui-page-head { margin-bottom: 0; }
+.ui-page-description { font-size: 14px; line-height: 21px; color: var(--svu-text-secondary-on-page); }
+.student-page-head.ui-feature .ui-meta { color: var(--svu-text-secondary); }
+
+/* ---------- Today ---------- */
+.student-today-grid { display: grid; grid-template-columns: minmax(0, 8fr) minmax(300px, 4fr); gap: var(--svu-space-7); align-items: start; }
+.student-main-column { display: grid; gap: var(--svu-space-6); min-width: 0; }
+.student-greeting { gap: var(--svu-space-2); padding-block: var(--svu-space-8); }
+.student-greeting .ui-body { color: var(--svu-text-secondary); font-size: 15px; }
+.ui-next { display: flex; flex-wrap: wrap; align-items: center; gap: var(--svu-space-4); }
+.ui-next > div { display: grid; gap: var(--svu-space-1); flex: 1; min-width: 200px; }
+.ui-next .ui-eyebrow { color: #6D28D9; }
+.ui-programme { display: grid; gap: var(--svu-space-1); }
+.ui-facts-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.ui-facts-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+.ui-overview-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--svu-space-6); }
+.ui-segmented { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; width: fit-content; max-width: 100%; border-radius: 12px; background: var(--svu-bg-muted); border: 1px solid var(--svu-border-hairline); }
+.ui-segmented a { display: inline-flex; align-items: center; gap: var(--svu-space-2); min-height: 34px; padding: 0 var(--svu-space-3); border-radius: var(--svu-radius-control); font-size: 13px; font-weight: 550; color: var(--svu-text-secondary); transition: background var(--svu-dur) var(--svu-ease), color var(--svu-dur) var(--svu-ease); }
+.ui-segmented a:hover { color: var(--svu-text-primary); }
+.ui-segmented a[aria-current] { background: var(--svu-bg-solid); color: var(--svu-blue); box-shadow: 0 1px 2px rgba(15,23,42,0.08), 0 0 0 1px var(--svu-border-hairline); }
+.ui-count { min-width: 20px; padding: 0 6px; border-radius: var(--svu-radius-badge); background: rgba(15,23,42,0.06); font-size: 12px; line-height: 20px; text-align: center; font-variant-numeric: tabular-nums; }
+.ui-segmented a[aria-current] .ui-count { background: var(--svu-blue-soft); }
+.ui-stack-tight { display: grid; gap: var(--svu-space-2); margin: 0; padding: 0; list-style: none; }
+.ui-plan { display: grid; gap: var(--svu-space-3); }
+.ui-plan + .ui-plan { padding-top: var(--svu-space-4); border-top: 1px solid var(--svu-border-hairline); }
+.ui-registration-summary { gap: var(--svu-space-4); }
+.student-experience .ui-link { text-decoration: none; }
+.ui-choice-side { grid-auto-flow: column; align-items: baseline; gap: 4px; }
+.ui-fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.ui-choice input[type="checkbox"] { margin: 0; }
+
+/* ---------- Standard controls for adapter-rendered content ---------- */
+.student-experience .button + .button { margin-left: 0; }
+.student-experience .ui-actions .button, .student-experience .hero-actions .button { margin: 0; }
+.student-experience details { min-width: 0; }
+.student-experience details[open] > :not(summary) { margin-top: var(--svu-space-3); }
+
+/* Adapter blocks sit inside a .ui-card; strip their legacy frames so cards never nest. */
+.ui-adapter > :is(section, div, details) { margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.student-experience .ui-card :is(.student-onboarding, .student-identity, .student-results, .student-academic, .student-award, .student-transcripts, .course-withdrawals, .support-workspace, .study-year, .result-period, .academic-period, .registry-identity) { margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.student-experience .ui-adapter :is(h2) { margin: 0 0 var(--svu-space-4); font-size: 20px; line-height: 28px; font-weight: 650; letter-spacing: -0.01em; }
+.student-experience .ui-adapter :is(h3) { margin: var(--svu-space-4) 0 var(--svu-space-2); font-size: 16px; line-height: 22px; font-weight: 600; }
+.student-experience .ui-adapter :is(h4) { margin: var(--svu-space-3) 0 var(--svu-space-2); font-size: 14px; line-height: 21px; font-weight: 600; }
+.student-experience .ui-adapter .section-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--svu-space-3); margin-bottom: var(--svu-space-4); }
+.student-experience .ui-adapter .section-header :is(h2, h3, h4) { margin: 0; }
+.student-experience .ui-adapter p { margin: 0 0 var(--svu-space-2); }
+.student-experience .ui-adapter ul:not(.ui-rows):not(.ui-legend):not(.ui-choice-list):not(.ui-stack-tight):not(.registration-blockers) { margin: 0 0 var(--svu-space-3); padding-left: 20px; }
+.student-experience .ui-adapter dl:not(.ui-facts) { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--svu-space-4); margin: 0 0 var(--svu-space-3); }
+.student-experience .ui-adapter dl:not(.ui-facts) dt { font-size: 12px; line-height: 18px; color: var(--svu-text-secondary); }
+.student-experience .ui-adapter dl:not(.ui-facts) dd { margin: 4px 0 0; font-weight: 550; overflow-wrap: break-word; }
+.student-experience .meta, .student-experience .muted { color: var(--svu-text-secondary); font-size: 13px; }
+
+/* Study year card */
+.student-experience .study-year h3 { margin-top: 0; font-size: 16px; }
+.student-experience .study-year [data-study-year-level] { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: var(--svu-radius-badge); background: var(--svu-blue-soft); color: var(--svu-blue); font-size: 12px; font-weight: 600; }
+.student-experience .study-year ul { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--svu-space-2); }
+.student-experience .study-year li { margin: 0; padding: var(--svu-space-3); border-radius: var(--svu-radius-row); background: var(--svu-bg-muted); font-size: 13px; line-height: 18px; color: var(--svu-text-secondary); }
+.student-experience .study-year li strong { display: block; color: var(--svu-text-primary); font-size: 14px; }
+
+/* Finance summary and ledger (registry-finance adapter) */
+.student-experience .finance-summary { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--svu-space-3); margin: 0 0 var(--svu-space-4); }
+.student-experience .finance-summary > div { padding: var(--svu-space-4); border-radius: var(--svu-radius-row); background: var(--svu-bg-muted); border: 1px solid var(--svu-border-hairline); }
+.student-experience .finance-summary dd { font-size: 20px; line-height: 28px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.student-experience [data-finance-hold] { margin: 0 0 var(--svu-space-4); padding: var(--svu-space-3) var(--svu-space-4); border-radius: var(--svu-radius-row); background: var(--svu-green-soft); color: var(--svu-green-text); font-weight: 550; }
+.student-experience .finance-ledger { display: grid; margin: 0; padding: 0; list-style: none; }
+.student-experience .finance-ledger li { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(0, 2fr) auto minmax(120px, 1fr); gap: var(--svu-space-4); align-items: center; min-height: 52px; padding: var(--svu-space-3) var(--svu-space-2); border-top: 1px solid var(--svu-border-hairline); font-size: 14px; }
+.student-experience .finance-ledger li span:first-child, .student-experience .finance-ledger li span:last-child { color: var(--svu-text-secondary); font-size: 13px; }
+.student-experience .finance-ledger strong { font-variant-numeric: tabular-nums; text-align: right; }
+.student-experience .finance-ledger li > span:last-child { grid-column: auto; text-align: right; }
+
+/* Tables rendered by adapters */
+
+/* Support thread */
+.student-experience .support-thread { display: grid; gap: var(--svu-space-3); margin: 0; padding: 0; list-style: none; }
+.student-experience .support-thread li { padding: var(--svu-space-4); border-radius: var(--svu-radius-row); background: var(--svu-bg-muted); }
+.student-experience .support-thread header { display: flex; justify-content: space-between; gap: var(--svu-space-3); font-size: 13px; color: var(--svu-text-secondary); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1023px) {
+  .student-today-grid { grid-template-columns: minmax(0, 1fr); gap: var(--svu-space-6); }
+  .student-side-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .student-side-column > :last-child { grid-column: 1 / -1; }
+  .student-mode .header-container { grid-template-columns: auto auto auto; }
+  .student-mode .brand > span:last-child { max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+  .ui-facts-4 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .student-experience .finance-ledger li { grid-template-columns: minmax(0, 1fr) auto; }
+  .student-experience .finance-ledger li > span:first-child, .student-experience .finance-ledger li > span:last-child { grid-column: 1 / -1; text-align: left; }
+}
+@media (max-width: 767px) {
+  .student-mode .header-container { display: flex; flex-wrap: wrap; gap: var(--svu-space-2) var(--svu-space-4); padding: var(--svu-space-3) 0; }
+  .student-mode .brand { flex: 1; min-width: 0; }
+  .student-mode .brand > span:last-child { max-width: none; font-size: 13px; }
+  .student-mode .nav-links { order: 3; flex-basis: 100%; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+  .student-mode .nav-links a { justify-content: center; white-space: nowrap; }
+  .student-mode .nav-actions .search { display: none; }
+  .student-experience { gap: var(--svu-space-5); }
+  .student-controls, .student-main-column { gap: var(--svu-space-5); }
+  .student-local-nav { gap: var(--svu-space-5); min-height: 48px; -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); }
+  .student-experience .student-context-disclosure > summary { display: flex; align-items: center; justify-content: space-between; min-height: 48px; padding: 0 var(--svu-space-4); border: 1px solid var(--svu-border-hairline); border-radius: var(--svu-radius-card-sm); background: rgba(255,255,255,0.72); font-size: 13px; font-weight: 550; color: var(--svu-text-primary); cursor: pointer; list-style: none; }
+  .student-context-disclosure > summary::-webkit-details-marker { display: none; }
+  .student-context-disclosure[open] > summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom: 0; }
+  .student-context-disclosure[open] > .student-context { border-top-left-radius: 0; border-top-right-radius: 0; }
+  .student-context { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--svu-space-3); }
+  .ui-context-field select { width: 100%; max-width: 100%; }
+  .student-number { margin-left: 0; }
+  .student-greeting { padding-block: var(--svu-space-6); }
+  .student-side-column, .ui-overview-grid { grid-template-columns: minmax(0, 1fr); }
+  .ui-facts-3, .ui-facts-4 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .ui-segmented { width: 100%; }
+  .ui-segmented a { flex: 1 1 auto; justify-content: center; }
+  .student-mode .mobile-nav { grid-template-columns: repeat(5, minmax(0, 1fr)); background: var(--svu-bg-elevated); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); border-top: 1px solid var(--svu-border-hairline); }
+  .student-mode .mobile-nav a { min-width: 0; border-radius: var(--svu-radius-control); }
+  .student-mode .mobile-nav a span { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .student-mode .mobile-nav a.is-active { color: var(--svu-blue); background: var(--svu-blue-soft); }
+  .student-experience .finance-ledger li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .student-experience .finance-ledger strong { text-align: left; }
+  .student-experience .finance-ledger li > span:last-child { grid-column: 1 / -1; text-align: left; }
+  .student-experience :is(.result-table, .support-queue) thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .student-experience :is(.result-table, .support-queue) tr { display: grid; gap: 2px; padding: var(--svu-space-3) var(--svu-space-4); border-bottom: 1px solid var(--svu-border-hairline); }
+  .student-experience :is(.result-table, .support-queue) td { display: block; padding: 0; border: 0; }
+  .student-experience :is(.result-table, .support-queue) td[data-label]::before { content: attr(data-label); display: block; font-size: 12px; line-height: 18px; font-weight: 500; color: var(--svu-text-secondary); }
+}
+@media (prefers-reduced-motion: reduce) { .student-mode * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* Final refinement: shared cool canvas, compact academic composition. */
+.student-mode .page-container { max-width: 1320px; }
+.student-mode .header-container { grid-template-columns: minmax(240px,1fr) auto minmax(180px,1fr); }
+.student-mode .nav-actions { justify-self: end; }
+.student-experience,.student-controls,.student-main-column { gap: var(--svu-space-5); }
+.student-local-nav { min-height: 48px; }
+.student-local-nav a { min-height: 44px; }
+.student-context { padding: var(--svu-space-2) var(--svu-space-4); gap: var(--svu-space-4); background: var(--svu-surface-soft); }
+.ui-context-field { grid-template-columns: auto minmax(0,1fr); align-items: center; gap: var(--svu-space-2); flex: 1 1 320px; }
+.ui-context-field > span { display: flex; align-items: center; gap: var(--svu-space-2); }
+.ui-context-field .ui-icon { width: 24px; height: 24px; background: transparent; }
+.ui-context-field .ui-icon svg { width: 18px; height: 18px; }
+.student-experience .ui-context-field select { min-height: 44px; max-width: 100%; width: 100%; }
+.student-number { display: grid; gap: var(--svu-space-1); padding-left: var(--svu-space-4); border-left: 1px solid var(--svu-border); }
+.student-number > span { font-size: 12px; }
+.student-number strong { color: var(--svu-text-primary); font-weight: 600; }
+.student-today-grid { grid-template-columns: minmax(0,8fr) minmax(300px,4fr); gap: var(--svu-space-5); }
+.student-section { align-content: start; gap: var(--svu-space-3); }
+.student-side-column .student-section { padding: var(--svu-space-5); background: var(--svu-surface-primary); }
+.student-side-column .ui-section-title { font-size: 18px; line-height: 24px; }
+.student-side-column .student-facts { gap: 0; }
+.student-facts > div { grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-items: center; gap: var(--svu-space-3); padding: var(--svu-space-2) 0; }
+.student-facts > div + div { border-top: 1px solid var(--svu-border-hairline); }
+.student-facts dd { text-align: right; }
+.student-greeting { position: relative; display: flex; align-items: center; gap: var(--svu-space-4); min-height: 148px; padding: var(--svu-space-6); background: var(--svu-bg-page) url('assets/campus-concept.jpg') center 55% / cover no-repeat; }
+.student-greeting::before { content: ''; position: absolute; inset: 0; background: var(--svu-hero-wash); }
+.student-greeting-content { position: relative; display: grid; gap: var(--svu-space-1); min-width: 0; flex: 1; }
+.student-greeting .ui-display { font-size: 34px; line-height: 40px; }
+.student-greeting .ui-body,.student-greeting .ui-meta { color: var(--svu-text-primary); }
+.student-date-widget { position: relative; display: flex; gap: var(--svu-space-2); align-items: center; padding: var(--svu-space-3); border-radius: var(--svu-radius-control); background: var(--svu-surface-elevated); color: var(--svu-text-primary); font-size: 12px; font-weight: 550; }
+.student-attention .ui-attention { padding: var(--svu-space-5); gap: var(--svu-space-3); }
+.student-events-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--svu-space-5); align-items: start; }
+.student-events-grid .student-section { padding: var(--svu-space-5); background: var(--svu-surface-primary); min-width: 0; }
+.student-events-grid .ui-section-title { font-size: 18px; line-height: 24px; }
+.student-events-grid .ui-section-head { gap: var(--svu-space-2); }
+.student-events-grid .ui-row { align-items: flex-start; }
+.student-events-grid .ui-row > .ui-badge { display: none; }
+.student-events-grid .ui-next { display: grid; grid-template-columns: auto minmax(0,1fr); gap: var(--svu-space-3); }
+.student-events-grid .ui-next > div { min-width: 0; }
+.student-events-grid .ui-next > .button { grid-column: 1 / -1; justify-self: start; }
+.ui-next .ui-eyebrow,.ui-icon-lavender { color: var(--svu-purple-text); }
+.student-course-grid { grid-template-columns: repeat(4,minmax(0,1fr)); }
+.ui-course { min-height: 200px; padding: var(--svu-space-4); }
+.ui-course-top { flex-wrap: wrap; }
+.ui-course-foot { display: grid; gap: var(--svu-space-1); }
+.ui-course-event { display: flex; align-items: center; gap: var(--svu-space-2); margin: 0; font-size: 12px; color: var(--svu-text-secondary); }
+.ui-course-event .ui-icon { width: 24px; height: 24px; }
+.student-experience .ui-row .ui-link,.student-experience .student-quick-links .ui-row { min-height: 48px; }
+.student-experience .ui-split { gap: var(--svu-space-5); }
+.student-experience .ui-stack { gap: var(--svu-space-5); }
+.student-experience .ui-adapter,.student-experience .registration-period { border-radius: 0; border: 0; box-shadow: none; background: var(--svu-surface-primary); }
+.student-experience .student-page-head.ui-card { border: 0; border-radius: 0; box-shadow: none; background: transparent; padding: 0; }
+.student-experience .ui-choice { min-height: 68px; }
+.student-experience .ui-choice input { width: 20px; height: 20px; accent-color: var(--svu-blue); }
+.student-experience .ui-choice:has(input:focus-visible) { outline: 2px solid var(--svu-blue); outline-offset: 2px; }
+.student-mode :is(a,button,input,select,textarea,summary):focus-visible { outline: 2px solid var(--svu-blue); outline-offset: 2px; }
+.student-command-button { background: transparent; border-color: transparent; }
+@media(max-width:1199px) {
+  .student-course-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .student-greeting { align-items: flex-start; flex-wrap: wrap; }
+  .student-date-widget { padding: var(--svu-space-2); }
+}
+@media(max-width:1023px) {
+  .student-today-grid { grid-template-columns: minmax(0,1fr); }
+  .student-mode .header-container { grid-template-columns: auto auto auto; }
+}
+@media(max-width:767px) {
+  .student-mode .header-container { display: flex; }
+  .student-today-grid,.student-main-column,.student-side-column { display: contents; }
+  .student-greeting { order: 0; min-height: 144px; padding: var(--svu-space-5); background-image: url('assets/campus-concept-mobile.jpg'); }
+  .student-greeting .ui-display { font-size: 28px; line-height: 34px; }
+  .student-date-widget { display: none; }
+  .student-attention { order: 1; }
+  .student-events-grid { order: 2; grid-template-columns: minmax(0,1fr); }
+  .student-courses-section { order: 3; }
+  .student-progress-section { order: 4; }
+  .student-recent-section { order: 5; }
+  .student-quick-section { order: 6; }
+  .student-programme-section { order: 7; }
+  .student-side-column > :last-child { grid-column: auto; }
+  .student-course-grid { grid-template-columns: minmax(0,1fr); }
+  .ui-course { min-height: 184px; }
+  .ui-context-field { display: grid; grid-template-columns: minmax(0,1fr); gap: var(--svu-space-1); }
+  .student-number { padding-left: 0; border-left: 0; }
+  .student-mode .nav-actions { gap: var(--svu-space-1); }
+  .student-mode .brand > span:last-child { display: block; max-width: 96px; white-space: normal; font-size: 12px; line-height: 14px; }
+  .student-context-disclosure > summary { background: var(--svu-surface-soft) !important; }
+}

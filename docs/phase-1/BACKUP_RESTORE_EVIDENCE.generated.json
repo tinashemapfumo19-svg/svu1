@@ -1,0 +1,50 @@
+{
+  "version": "full-database-recovery-v1",
+  "startedAt": "2026-10-16T15:15:09.533Z",
+  "checks": [
+    {
+      "id": "source_tool_cluster_verified",
+      "status": "passed",
+      "details": {}
+    },
+    {
+      "id": "snapshot_dump_created",
+      "status": "passed",
+      "details": {
+        "bytes": 1549913,
+        "digest": "d9b558e2688580be6dcb98c1d110626b89d2de5134c19b776a54abbc9b05f974",
+        "schemaDigest": "7de467ce18d8618336fa21976db2c0a41a899e26d09cd7a7487c047413a3cc80",
+        "relations": 302
+      }
+    },
+    {
+      "id": "unique_rehearsal_database_created",
+      "status": "passed",
+      "details": {}
+    },
+    {
+      "id": "dump_restored",
+      "status": "passed",
+      "details": {}
+    },
+    {
+      "id": "full_schema_and_content_verified",
+      "status": "passed",
+      "details": {
+        "status": "passed",
+        "relations": 302,
+        "rows": 9664,
+        "changed": []
+      }
+    },
+    {
+      "id": "owned_rehearsal_database_removed",
+      "status": "passed",
+      "details": {}
+    }
+  ],
+  "sourceDatabase": "svu_rebuild",
+  "rehearsalDatabase": "svu_restore_875180ba06b64714957e3ed4eff0a4b9",
+  "status": "passed",
+  "completedAt": "2026-10-16T15:15:32.854Z"
+}
