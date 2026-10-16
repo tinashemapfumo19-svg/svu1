@@ -10,8 +10,8 @@ test('shared shell, home filters and staff commands remain usable across screen 
   await page.locator('[data-shell-signin] [name=password]').fill('Phase1-Admin-Password-2026!');
   await page.locator('[data-shell-signin] button[type=submit]').click();
   await expect(page.locator('[data-home-area="Students"]')).toBeVisible();
-  // Work-area cards carry no pin buttons, no Pinned filter and no arrow.
-  await expect(page.locator('.home-pin, [data-home-filter="pinned"], .home-work-areas .ui-chevron')).toHaveCount(0);
+  // Home cards and rows carry no pin buttons, no Pinned filter and no arrows.
+  await expect(page.locator('.home-pin, [data-home-filter="pinned"], .ui-chevron')).toHaveCount(0);
   await page.locator('[data-home-filter="business"]').click();
   await expect(page.locator('[data-home-area="Finance"]')).toBeVisible();
   await expect(page.locator('[data-home-area="Students"]')).toHaveCount(0);

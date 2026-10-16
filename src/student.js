@@ -41,7 +41,6 @@
   };
   const icon = name => window.svuShell.glyphs[name] || icons[name] || window.svuShell.glyphs.learning;
   const ico = (name, tone = '', size = '') => `<span class="ui-icon ${size} ${tone ? `ui-icon-${tone}` : ''}">${icons[name] || icon(name)}</span>`;
-  const chevron = `<span class="ui-chevron">${icons.chevron}</span>`;
   const badge = (text, tone = '') => `<span class="ui-badge ${tone ? `ui-badge-${tone}` : ''}">${esc(text)}</span>`;
   const statusTone = { onboarded: 'green', active: 'green', confirmed: 'green', approved: 'green', completed: 'green', resolved: 'green', issued: 'green', open: 'blue', in_progress: 'blue', scheduled: 'blue', draft: 'blue', requested: 'amber', waiting_student: 'amber', waiting_applicant: 'amber', returned: 'amber', pending_onboarding: 'amber', blocked: 'red', rejected: 'red', revoked: 'red', suspended: 'red', withdrawn: '', closed: '', cancelled: '', superseded: '' };
   const statusLabel = { onboarded: 'Active student', pending_onboarding: 'Onboarding', waiting_student: 'Waiting for you', waiting_applicant: 'Waiting for you', in_progress: 'In progress' };
@@ -51,7 +50,7 @@
   const section = (title, body, href, label = 'View all', opts = {}) => `<section class="student-section ui-section ${opts.cls || ''}">${head(title, href, label, opts.desc)}${body}</section>`;
   const emptyState = ({ glyph = 'info', title = '', text = '', act = '', compact = false }) => `<div class="student-empty ui-empty ${compact ? 'ui-empty-compact' : ''}">${ico(glyph, 'blue', 'ui-icon-lg')}${title ? `<p class="ui-card-title">${esc(title)}</p>` : ''}${text ? `<p class="ui-meta">${esc(text)}</p>` : ''}${act}</div>`;
   const empty = text => emptyState({ text, compact: true });
-  const row = ({ href, glyph, tone = '', title, meta = '', lead = '', trail = '', cls = '' }) => `<${href ? `a href="${esc(href)}"` : 'div'} class="ui-row ${cls}">${lead || (glyph ? ico(glyph, tone, 'ui-icon-sm') : '')}<div><strong>${esc(title)}</strong>${meta ? `<span class="ui-meta">${meta}</span>` : ''}</div>${trail}${href ? chevron : ''}</${href ? 'a' : 'div'}>`;
+  const row = ({ href, glyph, tone = '', title, meta = '', lead = '', trail = '', cls = '' }) => `<${href ? `a href="${esc(href)}"` : 'div'} class="ui-row ${cls}">${lead || (glyph ? ico(glyph, tone, 'ui-icon-sm') : '')}<div><strong>${esc(title)}</strong>${meta ? `<span class="ui-meta">${meta}</span>` : ''}</div>${trail}</${href ? 'a' : 'div'}>`;
   const tints = ['', 'tint-green', 'tint-lavender'];
   const tintFor = key => tints[[...String(key)].reduce((sum, c) => sum + c.charCodeAt(0), 0) % tints.length];
   const pageInfo = {
@@ -238,7 +237,7 @@
         <h3 class="ui-card-title">${esc(course.title)}</h3><p class="ui-meta">${esc(course.period.name)}</p>
         ${next ? `<p class="ui-course-event">${ico('calendar', 'lavender', 'ui-icon-sm')}<span>Exam ${esc(date(next.startsAt))}</span></p>` : ''}
         ${(() => { const due = (data.calendar?.events || []).find(event => event.type === 'assignment' && ['due', 'due_soon', 'overdue'].includes(event.status) && event.href === `#study/courses/${encodeURIComponent(course.period.id)}/${encodeURIComponent(course.courseId)}`); return due ? `<p class="ui-course-event ui-countdown is-${esc(due.status)}">${ico('clock', due.status === 'due' ? 'blue' : due.status === 'overdue' ? 'red' : 'amber', 'ui-icon-sm')}<span>${esc(due.title)} ${due.status === 'overdue' ? 'overdue' : 'due ' + esc(window.svuCalendar.countdown(due.start))}</span></p>` : ''; })()}
-        <div class="ui-course-foot"><span class="ui-meta ui-num">${course.credits} credits${course.requirementType ? ` / ${esc(human(course.requirementType))}` : ''}</span><span class="ui-link">View course ${icons.chevron}</span></div></a>`;
+        <div class="ui-course-foot"><span class="ui-meta ui-num">${course.credits} credits${course.requirementType ? ` / ${esc(human(course.requirementType))}` : ''}</span><span class="ui-link">View course</span></div></a>`;
     };
     if (!rows.length) return '';
     if (limit) return `<div class="student-course-grid ui-course-grid">${rows.slice(0, limit).map(card).join('')}</div>`;
@@ -294,8 +293,8 @@
       : emptyState({ glyph: 'calendar', title: 'No upcoming examinations', text: 'You have no published exam sittings in this semester.', act: action(link('study', 'timetable'), 'View timetable'), compact: true });
     const audit = data.award?.audit, done = audit ? audit.courses.filter(row => row.satisfied).length : 0, total = audit ? audit.courses.length : 0;
     const progress = audit && total ? `<p class="ui-progress-number">${audit.creditsEarned}<span> credits earned</span></p><p class="ui-meta">${done} / ${total} curriculum courses satisfied</p><div class="ui-bar" role="img" aria-label="${done} of ${total} curriculum courses satisfied"><span class="is-done" style="width:${Math.round(done / total * 100)}%"></span></div>
-        <ul class="ui-legend"><li><i class="is-done"></i>Completed ${done}</li><li><i></i>Remaining ${total - done}</li></ul><a class="ui-link student-text-link" href="${esc(link('study', 'results'))}">View progress ${icons.chevron}</a>`
-      : `<p class="ui-meta">Progress appears here once completion requirements are published for your programme.</p><a class="ui-link student-text-link" href="${esc(link('study', 'results'))}">View results ${icons.chevron}</a>`;
+        <ul class="ui-legend"><li><i class="is-done"></i>Completed ${done}</li><li><i></i>Remaining ${total - done}</li></ul><a class="ui-link student-text-link" href="${esc(link('study', 'results'))}">View progress</a>`
+      : `<p class="ui-meta">Progress appears here once completion requirements are published for your programme.</p><a class="ui-link student-text-link" href="${esc(link('study', 'results'))}">View results</a>`;
     const quick = [['registration', 'Course registration', 'book'], ['fees', 'Account statement', 'wallet'], ['requests', 'Student requests', 'grid'], ['documents', 'Official documents', 'shield']];
     const day = new Date().toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
     const facts = [['Student number', data.student.studentNumber], ...(data.programme.studyYear?.yearOfStudy ? [['Study year', `Year ${data.programme.studyYear.yearOfStudy}`]] : []), ['Intake', data.programme.intakeLabel], ['Status', status(data.programme.status)], ...(data.programme.versionLabel ? [['Curriculum version', data.programme.versionLabel]] : [])];
@@ -333,7 +332,7 @@
     const tabs = `<nav class="student-filter-links ui-segmented" aria-label="Filter requests">${[['all', 'All'], ['open', 'Open'], ['awaiting', 'Awaiting you'], ['completed', 'Completed']].map(([value, label]) => `<a ${filter === value ? 'aria-current="page"' : ''} href="${esc(link('office', 'requests', { filter: value }))}">${label}<span class="ui-count" aria-hidden="true">${count(value)}</span></a>`).join('')}</nav>`;
     const list = rows.length ? `<div class="ui-rows">${rows.map(row => {
       const state = requestState(row), when = row.updatedAt || row.reviewedAt || row.requestedAt || row.createdAt;
-      return `<a class="student-update ui-row" href="${esc(destination(row))}">${ico(glyphs[row.destination], state.group === 'awaiting' ? 'amber' : 'blue', 'ui-icon-sm')}<div><strong>${esc(row.subject || row.type)}</strong><span class="ui-meta">${esc(row.type)} / ${esc(human(row.status))}${when ? ` / ${esc(date(when))}` : ''}</span><span class="ui-meta">Next: ${esc(state.actor)}</span></div>${status(row.status)}${chevron}</a>`;
+      return `<a class="student-update ui-row" href="${esc(destination(row))}">${ico(glyphs[row.destination], state.group === 'awaiting' ? 'amber' : 'blue', 'ui-icon-sm')}<div><strong>${esc(row.subject || row.type)}</strong><span class="ui-meta">${esc(row.type)} / ${esc(human(row.status))}${when ? ` / ${esc(date(when))}` : ''}</span><span class="ui-meta">Next: ${esc(state.actor)}</span></div>${status(row.status)}</a>`;
     }).join('')}</div>` : emptyState({ glyph: 'list', text: 'No requests match this view.', compact: true });
     return `${section('Your requests', `${tabs}${list}`, '', '', { desc: 'Each request keeps its own form and history below.' })}
       <div class="ui-card ui-adapter">${window.supportCasesUI.studentView(adapter)}</div>
@@ -346,8 +345,8 @@
   // form[data-form="course-selection"] + hidden revision + courseIds, [data-confirm-registration], server checks authoritative.
   const requirementTitles = { FINANCIAL_HOLD: 'Financial clearance required', REPEAT_EVIDENCE: 'Repeat approval required', PREREQUISITE_EVIDENCE: 'Prerequisite not met', CREDIT_LIMIT: 'Credit limit exceeded', CORE_COURSE: 'Core course not selected', COURSE_SELECTION: 'Course selection needed', COURSE_STATUS: 'Course not available', ALREADY_ENROLLED: 'Already enrolled', RECOGNISED_COURSE: 'Already recognised', PROGRESSION_APPROVAL: 'Progression approval required', CURRICULUM_VERSION: 'Curriculum version mismatch', TRANSFER_CHRONOLOGY: 'Transfer timing conflict' };
   function requirementAction(code) {
-    if (code === 'FINANCIAL_HOLD') return `<a class="ui-link" href="${esc(link('office', 'fees'))}">View account ${icons.chevron}</a>`;
-    if (['REPEAT_EVIDENCE', 'PROGRESSION_APPROVAL', 'PREREQUISITE_EVIDENCE'].includes(code)) return `<a class="ui-link" href="${esc(link('study', 'results'))}">View academic decisions ${icons.chevron}</a>`;
+    if (code === 'FINANCIAL_HOLD') return `<a class="ui-link" href="${esc(link('office', 'fees'))}">View account</a>`;
+    if (['REPEAT_EVIDENCE', 'PROGRESSION_APPROVAL', 'PREREQUISITE_EVIDENCE'].includes(code)) return `<a class="ui-link" href="${esc(link('study', 'results'))}">View academic decisions</a>`;
     return '';
   }
   function registrationView(data) {

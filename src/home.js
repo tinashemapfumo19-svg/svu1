@@ -57,7 +57,7 @@
       <div class="ui-main-rail"><div class="ui-main">
       ${ui.panel("Open for applications", `<div class="ui-course-grid">${intakes.map((entry, index) => `<article class="catalogue-card ui-course ${["", "tint-green", "tint-lavender"][index % 3]}"><div class="ui-course-top"><span class="ui-course-code">${esc(entry.programmeCode)}</span>${ui.badge("Open", "green")}</div><h3 class="ui-card-title">${esc(entry.programmeName)}</h3>
           <p class="ui-meta">${esc(entry.label)} · starts ${esc(date(entry.startsOn))}</p><p class="ui-meta">${esc(entry.department)} · ${esc(entry.faculty)}</p>
-          <span class="ui-course-foot"><a class="ui-link" href="#apply">Apply ${ui.icons.chevron}</a></span></article>`).join("")}</div>${intakes.length ? "" : ui.emptyState({ glyph: "cap", title: "No intakes are open right now", text: "Check back soon, or sign in to continue an existing application.", compact: true })}`,
+          <span class="ui-course-foot"><a class="ui-link" href="#apply">Apply</a></span></article>`).join("")}</div>${intakes.length ? "" : ui.emptyState({ glyph: "cap", title: "No intakes are open right now", text: "Check back soon, or sign in to continue an existing application.", compact: true })}`,
         { desc: intakes.length ? `${intakes.length} intake${intakes.length === 1 ? "" : "s"} accepting applications` : "No intakes are open right now", actions: `<a class="button button-secondary" href="#apply">Start an application</a>` })}
       </div><aside class="ui-rail">
         <form class="ui-panel verify-card" data-home-verify>
@@ -163,7 +163,7 @@
   function accountRail(me, data, staff) {
     const ui = window.svuUI;
     const roles = (me?.roles || []).map((role) => ui.sentence(role.code));
-    const account = ui.panel("Your account", `${ui.facts([["Name", me?.person?.legalName || ""], ["Email", me?.account?.email || ""], roles.length ? ["Roles", roles.join(", ")] : null, ["Two-step verification", { html: me?.mfa?.enrolled ? ui.badge("On", "green") : ui.badge("Off", "amber") }]])}<a class="ui-link" href="#settings">Manage account ${ui.icons.chevron}</a>`);
+    const account = ui.panel("Your account", `${ui.facts([["Name", me?.person?.legalName || ""], ["Email", me?.account?.email || ""], roles.length ? ["Roles", roles.join(", ")] : null, ["Two-step verification", { html: me?.mfa?.enrolled ? ui.badge("On", "green") : ui.badge("Off", "amber") }]])}<a class="ui-link" href="#settings">Manage account</a>`);
     const quick = quickActions(staff);
     const actions = ui.panel("Quick actions", `<div class="ui-rows">${quick.map(([href, title, glyph]) => ui.row({ href, glyph, tone: "blue", title })).join("")}</div>`);
     const calendar = window.svuSession.canAny(["teaching.self", "admissions.apply"]) ? `<section class="ui-panel" data-calendar-mini></section>` : "";

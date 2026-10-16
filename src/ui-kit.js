@@ -94,7 +94,7 @@
   }
   const confirmAction = (options) => dialog(options);
   const ask = (options) => dialog({ ...options, field: { label: options.label || "Reason", multiline: true, ...(options.field || {}) } });
-  const row = ({ href, glyph: name, tone = "", title, meta = "", lead = "", trail = "", cls = "", attrs = "" }) => `<${href ? `a href="${esc(href)}"` : "div"} class="ui-row ${cls}" ${attrs}>${lead || (name ? ico(name, tone, "ui-icon-sm") : "")}<div><strong>${esc(title)}</strong>${meta ? `<span class="ui-meta">${meta}</span>` : ""}</div>${trail}${href ? chevron : ""}</${href ? "a" : "div"}>`;
+  const row = ({ href, glyph: name, tone = "", title, meta = "", lead = "", trail = "", cls = "", attrs = "" }) => `<${href ? `a href="${esc(href)}"` : "div"} class="ui-row ${cls}" ${attrs}>${lead || (name ? ico(name, tone, "ui-icon-sm") : "")}<div><strong>${esc(title)}</strong>${meta ? `<span class="ui-meta">${meta}</span>` : ""}</div>${trail}</${href ? "a" : "div"}>`;
   // Facts take [label, value] pairs; values are escaped unless passed as { html }.
   const facts = (pairs, cls = "") => `<dl class="ui-facts ${cls}">${pairs.filter(Boolean).map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${value && typeof value === "object" ? value.html : esc(value)}</dd></div>`).join("")}</dl>`;
   const attention = ({ tone = "warning", glyph: name = "alert", eyebrow = "Your attention", title, text = "", act = "", attrs = "" }) => {
