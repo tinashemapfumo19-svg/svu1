@@ -92,7 +92,14 @@ test('account chooser stays beside account actions',async({page},info)=>{
   await expect(page.locator('[data-system-account-detail] .staff-record-hero')).toBeVisible();
   await page.locator('[data-system-account-detail]').evaluate(node=>{const block=document.createElement('div');block.style.height='1800px';node.append(block);});
   await page.evaluate(()=>scrollBy(0,600));await settle(page);
-  if(info.project.name==='mobile')await expect(picker).toHaveCSS('position','static');
+  if(info.project.name==='mobile'){
+    await expect(picker).toHaveCSS('position','static');
+    const results=picker.locator('.workspace-picker-results');
+    await results.evaluate(node=>{for(let i=0;i<35;i++)node.append(node.firstElementChild.cloneNode(true));});
+    expect(await results.evaluate(node=>node.clientHeight)).toBeLessThanOrEqual(360);
+    await expect(results).toHaveCSS('overflow-y','auto');
+    expect(await results.evaluate(node=>node.scrollHeight)).toBeGreaterThan(await results.evaluate(node=>node.clientHeight));
+  }
   else {
     await expect(picker.locator('[data-system-account-filter]')).toBeInViewport();
     await expect(picker.locator('.staff-pager')).toBeInViewport();

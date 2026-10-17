@@ -98,7 +98,14 @@
   .registry-workspace .workspace-picker,
   .registry-workspace .workspace-record-context { position: static; }
   .registry-workspace .workspace-picker { max-height: none; }
-  .registry-workspace .workspace-picker-results { max-height: none; overflow: visible; }
+  /* Keep the selected record reachable after a long chooser stacks above it.
+     The filter and pager stay in page flow; only the result list scrolls. */
+  .registry-workspace .workspace-picker .workspace-picker-results {
+    max-height: min(360px, 45dvh);
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    scroll-padding-block: 8px;
+  }
   .registry-workspace .academic-list { max-height: none; overflow: visible; }
 }
 .registry-workspace.workspace-layout-short .staff-body .record-jump,
