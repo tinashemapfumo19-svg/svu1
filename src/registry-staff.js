@@ -13,9 +13,6 @@
     if (!data) return "";
     const detail = state.staffDetail,manage = data.capabilities.manage;
     return `<details class="registry-staff" data-staff-panel ${state.staffOpen ? "open" : ""}><summary>Staff records (${data.total})</summary>
-      <form class="form form-grid" data-staff-filter><label class="field"><span>Staff name, number or email</span><input class="input" name="q" value="${esc(state.staffFilters?.q)}"></label>
-        <label class="field"><span>Staff status</span><select class="input" name="status"><option value="">All</option>${["invited","active","suspended","exited"].map((status) => `<option ${state.staffFilters?.status === status ? "selected" : ""}>${status}</option>`).join("")}</select></label>
-        <div><button class="button button-secondary" type="submit">Search staff</button></div></form>
       ${manage ? `<details><summary>Add staff member</summary><form class="form form-grid" data-staff-create>
         <label class="field"><span>Work email</span><input class="input" name="email" type="email" required></label>
         <label class="field"><span>Legal name</span><input class="input" name="legalName" maxlength="200" required></label>
@@ -27,8 +24,13 @@
         ${employmentFields(state)}
         <label class="field"><span>Appointment reason</span><textarea class="input" name="reason" maxlength="2000" required></textarea></label>
         <div><button class="button button-primary" type="submit">Create staff record and invite</button></div></form></details>` : ""}
-      <ul class="staff-list">${data.items.map((row) => `<li><button type="button" class="review-row" data-staff-detail="${esc(row.id)}"><strong>${esc(row.legalName)} - ${esc(row.employeeNumber)}</strong><span>${esc(row.departmentName)} - ${esc(human(row.category))} ${esc(row.grade)}</span><span>${esc(row.status)}</span></button></li>`).join("") || "<li>No staff records.</li>"}</ul>
-      ${detail ? `<section class="staff-detail" data-staff-record="${esc(detail.id)}"><header class="section-header"><h3>${esc(detail.legalName)} (${esc(detail.employeeNumber)})</h3><strong>${esc(detail.status)}</strong></header>
+      <div class="registry-grid staff-record-workbench"><aside class="review-sidebar workspace-picker" aria-label="Staff search and records">
+      <form class="workspace-picker-filter" data-staff-filter><label class="field"><span>Staff name, number or email</span><input class="input" name="q" value="${esc(state.staffFilters?.q)}"></label>
+        <label class="field"><span>Staff status</span><select class="input" name="status"><option value="">All</option>${["invited","active","suspended","exited"].map((status) => `<option ${state.staffFilters?.status === status ? "selected" : ""}>${status}</option>`).join("")}</select></label>
+        <div><button class="button button-secondary" type="submit">Search staff</button></div></form>
+<h3>Staff records</h3>
+      <div class="workspace-picker-results" tabindex="0" role="region" aria-label="Staff search results"><ul class="staff-list">${data.items.map((row) => `<li><button type="button" class="review-row" data-staff-detail="${esc(row.id)}"><strong>${esc(row.legalName)} - ${esc(row.employeeNumber)}</strong><span>${esc(row.departmentName)} - ${esc(human(row.category))} ${esc(row.grade)}</span><span>${esc(row.status)}</span></button></li>`).join("") || "<li>No staff records.</li>"}</ul></div>
+      </aside><div class="review-detail">${detail ? `<section class="staff-detail" data-staff-record="${esc(detail.id)}"><header class="section-header"><h3>${esc(detail.legalName)} (${esc(detail.employeeNumber)})</h3><strong>${esc(detail.status)}</strong></header>
         <p>${esc(detail.email)} - engaged ${esc(detail.engagedOn)}${detail.exitedOn ? ` - exited ${esc(detail.exitedOn)}` : ""}</p>
         ${detail.invitation && detail.status === "invited" ? `<p data-staff-invitation="${esc(detail.invitation.status)}">${{pending_activation:"Waiting for the new account to be activated",pending_acceptance:"Offered to an existing account - waiting for acceptance",declined:"The account holder declined this appointment",withdrawn:"Invitation withdrawn"}[detail.invitation.status] || esc(detail.invitation.status)}</p>` : ""}
         <p>${esc(detail.departmentName)} - ${esc(human(detail.category))} ${esc(detail.grade)}${detail.supervisorName ? ` - reports to ${esc(detail.supervisorName)}${detail.supervisorStatus === "exited" ? " (exited: reassign)" : ""}` : ""}</p>
@@ -42,7 +44,7 @@
           <label class="field"><span>New status</span><select class="input" name="toStatus">${({invited:["exited"],active:["suspended","exited"],suspended:["active","exited"]})[detail.status].map((status) => `<option>${status}</option>`).join("")}</select></label>
           <label class="field"><span>Status effective on</span><input class="input" name="effectiveOn" type="date" required></label>
           <label class="field"><span>Status reason</span><textarea class="input" name="reason" maxlength="2000" required></textarea></label><div><button class="button button-primary" type="submit">Change staff status</button></div></form></details>` : ""}
-      </section>` : ""}
+      </section>` : "<p>Select a staff record to view employment and account details.</p>"}</div></div>
     </details>`;
   }
   async function load(state,api) {

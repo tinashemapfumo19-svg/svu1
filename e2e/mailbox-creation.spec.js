@@ -134,7 +134,7 @@ test('a pending invitation cannot reset, reactivate or grant roles to an existin
   try {
     const admin = await api('POST', '/api/identity/sessions', { email: 'admin@southvalley.test', password: 'Phase1-Admin-Password-2026!' }, undefined, 201);
     const first = await api('POST', '/api/identity/invitations', { email, roleCode: 'applicant' }, admin.token, 201);
-    const second = await api('POST', '/api/identity/invitations', { email, roleCode: 'lecturer', scope: { programmeCodes: ['ISOLATED'] } }, admin.token, 201);
+    const second = await api('POST', '/api/identity/invitations', { email, roleCode: 'legacy_staff', scope: { programmeCodes: ['ISOLATED'] } }, admin.token, 201);
     const original = await api('POST', '/api/identity/activations', { token: first.activationToken, password, preferredName: 'Original', legalName: 'Isolated original identity' });
     for (const suspended of [false, true]) {
       if (suspended) await api('POST', `/api/identity/accounts/${original.id}/suspend`, { reason: 'Isolated activation authority' }, admin.token);
@@ -142,7 +142,7 @@ test('a pending invitation cannot reset, reactivate or grant roles to an existin
       await api('POST', '/api/identity/activations', { token: second.activationToken, password: 'Creation-Replacement-Password-2026!', preferredName: 'Replacement', legalName: 'Must not replace identity' }, undefined, 409);
       expect(await retained(pool)).toEqual(before);
       expect((await pool.query('select status,used_at from account_activation_tokens where invitation_id=$1', [second.id])).rows[0]).toEqual({ status: 'active', used_at: null });
-      await api('POST', '/api/identity/invitations', { email: email.toUpperCase(), roleCode: 'lecturer' }, admin.token, 409);
+      await api('POST', '/api/identity/invitations', { email: email.toUpperCase(), roleCode: 'legacy_staff' }, admin.token, 409);
       expect(await retained(pool)).toEqual(before);
     }
   } finally { await pool.end(); }

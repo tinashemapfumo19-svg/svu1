@@ -1075,3 +1075,22 @@ Open decisions are tracked in `docs/OUTSTANDING_DECISIONS.md`. Do not block impl
 Prepared legacy access profile consolidation (migration 119), university relationship support (migration 120), and admin dropdown label/width fixes for the requested v2 push and droplet redeployment. All 46 focused tests passed; migrations 001-120 passed against a fresh disposable database in production mode. Release identifier: v2 Git tag. Deployment uses committed source only. No local legacy data, development accounts or seeders are deployed.
 
 Deployment completed: revision 3f8db86 (tag v2) is live at https://portal.luminarytech.org. Migrations 119 and 120 applied, systemd service is active, public production/database health checks pass, and public CSS/JS include all three dropdown fixes. Main and annotated v2 tag were pushed successfully. Pre-deploy database backup: /var/backups/svu/pre-v2-20261016-182309.dump. Verified 2026-10-16 at 20:29 SAST.
+
+## Codex - 2026-10-16 - resumed workspace layout verification
+
+Focused verification IN PROGRESS: existing sticky workspace implementation in src/workspace-layout.js and .css, chooser markup in registry/academic/accounts/staff/assets/leave/cashbook, index and UI enhancement wiring. Source edits paused during isolated integration launcher session 82335 on port 4197; log data/workspace-layout-verification.log. Selected workspace-layout and app-shell browsers plus units and API smokes. Working and production databases must not be reseeded. No deployment is included in this continuation.
+
+## Claude - 2026-10-16 - took over workspace layout verification (owner request)
+
+Codex's session stopped (empty verification log, no edits after 22:03). Claude picked up the sticky workspace layout and fixed what blocked verification:
+
+- `scripts/seed-postgres.js`: the reset truncated the roles that migrations define (119's consolidated profiles, `is_assignable`, `legacy_access_level`, `role_profile_members`), so no role was assignable on a seeded database and every invitation/role-assignment journey failed. The seed now captures the migration role setup before truncating, restores it afterwards and calls `refresh_legacy_access_profiles()`.
+- Migration `121_admin_profiles_exclude_portal_self_service.sql`: since 119, Sysadmin held every permission including `registry.self` and `admissions.apply`, so the client (`isStudent = can('registry.self')`) put admins in an empty student portal. Sysadmin and Master Administrator now get every permission except portal-only ones (held only by student/applicant): `admissions.apply`, `communications.self`, `enquiries.self`, `registry.self`, `support.self`. Both admin profiles are now 124 permissions, not 129.
+- `src/home.js`: `/api/teaching/me` 404 (teaching.self without a staff record, e.g. Sysadmin) is "no teaching", not a home load error.
+- Stale tests and scripts updated to the consolidated roles: `lecturer` → `legacy_staff`, `auditor` → `legacy_reports`, specialist registrar roles → `legacy_supervisor` (seed-walkthrough, app-shell, mailbox-creation/linkage, assets/fleet/mailbox-linkage units). The Sysadmin nav now also shows Shared records and My teaching (superset of staff levels).
+- `e2e/workspace-layout.spec.js`: seeds walkthrough data (the base seed has no students) and waits for the admissions queue to finish loading before lengthening the page.
+
+Verification: units 805/805; selected browser runs (workspace-layout, app-shell, shell-alignment, student-experience, mailbox-creation, mailbox-linkage, premium-ui, home-refinement) 60/60 on an isolated database, port 4193.
+
+Production (owner-approved, earlier today): the local database was restored onto production, MFA policy is `off`, and the development-only `user_authorized_master_rollout` grants were ENDED there (audited). Do not re-run the master rollout against production.
+

@@ -111,6 +111,7 @@
   const emptyLine = /^(no|nothing|none)\b[^.]{0,80}\.?$/i;
   function enhance(root) {
     if (!root) return;
+    window.svuWorkspaceLayout?.enhance(root);
     // "No cashbooks." style lines read as compact empty states, with their text untouched.
     for (const node of root.querySelectorAll(".staff-body p, .staff-body li, .staff-body td[colspan]")) {
       if (!node.children.length && emptyLine.test(node.textContent.trim()) && !node.closest(".ui-empty, .ui-facts, .notice, .ui-alert")) node.classList.add("ui-empty-line");

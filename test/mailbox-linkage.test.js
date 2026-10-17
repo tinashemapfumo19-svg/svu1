@@ -33,7 +33,7 @@ test('registration returns generic acceptance for all-status canonical ambiguity
 });
 
 test('staff canonical ambiguity rolls back before references, invitations, grants or notifications', async () => {
-  const input = { email: ' Fixture@Example.com ', legalName: 'Fixture Person', preferredName: 'Fixture', category: 'LECTURER', grade: 'L1', departmentId: 'dept_computing', roleCode: 'lecturer', engagedOn: '2026-01-15', reason: 'Approved fixture', linkExistingAccount: true };
+  const input = { email: ' Fixture@Example.com ', legalName: 'Fixture Person', preferredName: 'Fixture', category: 'LECTURER', grade: 'L1', departmentId: 'dept_computing', roleCode: 'legacy_staff', engagedOn: '2026-01-15', reason: 'Approved fixture', linkExistingAccount: true };
   const actor = { accountId: 'admin', roles: [{ code: 'system_administrator', scope: {}, permissions: ['staff.manage'] }] };
   for (const status of ['active','suspended','invited']) {
     const f = fixture([{ id: 'a', status: 'active' }, { id: 'b', status }]);

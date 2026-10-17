@@ -80,7 +80,8 @@ test("one sign-in drives role-aware navigation, real dashboards, workspace scree
   await noOverflow();
   await page.screenshot({ path: info.outputPath("staff-home.png"), fullPage: true });
   if (!mobile) {
-    await expect(page.locator(".nav-links a")).toHaveText(["Home", "Admissions", "Workspace", "Resources", "Inbox"]);
+    // Sysadmin is a superset of every staff level (migration 119), so it also sees shared records and teaching.
+    await expect(page.locator(".nav-links a")).toHaveText(["Home", "Shared records", "My teaching", "Admissions", "Workspace", "Resources", "Inbox"]);
     await page.locator("#shell-search").fill("nobody-matches-this");
     await page.locator("#shell-search").press("Enter");
     await expect(page).toHaveURL(/#registry\/students$/);
@@ -111,20 +112,20 @@ test("one sign-in drives role-aware navigation, real dashboards, workspace scree
   await page.locator(`[data-system-account="${applicant.id}"]`).click();
   await expect(page.locator("[data-system-account-detail] h2")).toHaveText(`Shell Person shell.${stamp}`);
   await page.locator("[data-system-account-detail] details > summary").click();
-  await page.locator("[data-system-grant-role] [name=roleCode]").selectOption("auditor");
+  await page.locator("[data-system-grant-role] [name=roleCode]").selectOption("legacy_reports");
   await page.locator("[data-system-grant-role] [name=reason]").fill("Temporary audit cover");
   await page.locator("[data-system-grant-role] button[type=submit]").click();
   await expect(page.locator(".notice-success")).toHaveText("Role granted.");
-  const auditorRow = page.locator("[data-system-roles] li").filter({ hasText: "Auditor" });
+  const auditorRow = page.locator("[data-system-roles] li").filter({ hasText: "Reports Access Only" });
   await expect(auditorRow).toContainText("All programmes");
   await audit();
   await auditorRow.locator("[name=reason]").fill("Cover finished");
   await auditorRow.locator("button[type=submit]").click();
   await expect(page.locator(".notice-success")).toHaveText("Role ended.");
-  await expect(page.locator("[data-system-roles] li").filter({ hasText: "Auditor" })).toHaveCount(0);
+  await expect(page.locator("[data-system-roles] li").filter({ hasText: "Reports Access Only" })).toHaveCount(0);
   expect((await api("GET", "/api/identity/me", undefined, applicant.token)).permissions).not.toContain("audit.view");
   const adminSession = await admin(), adminId = (await api("GET", "/api/identity/me", undefined, adminSession.token)).account.id;
-  for (const [path, body] of [["/api/access/role-assignments", { accountId: adminId, roleCode: "auditor", reason: "Self grant" }], [`/api/identity/accounts/${adminId}/suspend`, { reason: "Self" }], [`/api/identity/accounts/${adminId}/mfa/reset`, { reason: "Self" }]]) {
+  for (const [path, body] of [["/api/access/role-assignments", { accountId: adminId, roleCode: "legacy_reports", reason: "Self grant" }], [`/api/identity/accounts/${adminId}/suspend`, { reason: "Self" }], [`/api/identity/accounts/${adminId}/mfa/reset`, { reason: "Self" }]]) {
     expect((await raw("POST", path, body, adminSession.token)).status()).toBe(403);
   }
   await page.locator("[data-system-account-filter] [name=q]").fill("admin@southvalley.test");

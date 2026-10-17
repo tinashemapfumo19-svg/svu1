@@ -126,18 +126,19 @@
   function studentsPanel(detail) {
     const ui = window.svuUI;
     const page = Math.floor((state.rows?.offset || 0) / 25) + 1, pages = Math.max(1, Math.ceil((state.rows?.total || 0) / 25));
-    return `<section class="ui-panel staff-search"><form class="staff-filter" data-registry-filter>
+    return `<div class="registry-grid record-workbench ui-bare">
+        <aside class="review-sidebar workspace-picker" aria-label="Student search and records">
+        <form class="staff-filter workspace-picker-filter" data-registry-filter>
         <label class="field field-wide"><span>Student number or name</span><input class="input" name="q" value="${esc(state.filters?.q)}"></label>
         <label class="field"><span>Status</span><select class="input" name="status"><option value="">All statuses</option>${["pending_onboarding", "onboarded", "suspended", "interrupted", "withdrawn", "transferred"].map((status) => `<option value="${status}" ${state.filters?.status === status ? "selected" : ""}>${esc(ui.statusLabel(status))}</option>`).join("")}</select></label>
         <div><button class="button button-primary">Search</button></div>
-      </form></section>
-      <div class="registry-grid record-workbench ui-bare">
-        <div class="review-sidebar">${ui.head("Records", { actions: `<p class="ui-meta" data-registry-count>${state.rows?.total ?? 0} programme records</p>` })}
-        <div class="ui-rows">${state.rows?.items.map((row) => `<button type="button" class="review-row ${row.id === detail?.id ? "is-selected" : ""}" data-registry-detail="${esc(row.id)}" ${row.id === detail?.id ? 'aria-current="true"' : ""}><span class="ui-row-top"><strong>${esc(row.legalName)}</strong>${ui.status(row.status)}</span><span class="ui-meta">${esc(row.studentNumber)} · ${esc(row.programmeCode)} · ${esc(row.intakeLabel)}</span></button>`).join("") || ui.emptyState({ glyph: "search", text: "No matching student records.", compact: true })}</div>
+      </form>
+        ${ui.head("Records", { actions: `<p class="ui-meta" data-registry-count>${state.rows?.total ?? 0} programme records</p>` })}
+        <div class="ui-rows workspace-picker-results" tabindex="0" role="region" aria-label="Student search results">${state.rows?.items.map((row) => `<button type="button" class="review-row ${row.id === detail?.id ? "is-selected" : ""}" data-registry-detail="${esc(row.id)}" ${row.id === detail?.id ? 'aria-current="true"' : ""}><span class="ui-row-top"><strong>${esc(row.legalName)}</strong>${ui.status(row.status)}</span><span class="ui-meta">${esc(row.studentNumber)} · ${esc(row.programmeCode)} · ${esc(row.intakeLabel)}</span></button>`).join("") || ui.emptyState({ glyph: "search", text: "No matching student records.", compact: true })}</div>
         <div class="staff-pager"><button class="icon-button" type="button" data-registry-page="-1" title="Previous page" aria-label="Previous page" ${!state.rows?.offset ? "disabled" : ""}>&larr;</button>
         <span class="ui-meta">Page ${page} of ${pages}</span>
-        <button class="icon-button" type="button" data-registry-page="1" title="Next page" aria-label="Next page" ${(state.rows?.offset || 0) + 25 >= (state.rows?.total || 0) ? "disabled" : ""}>&rarr;</button></div></div>
-        <div class="review-detail">${detail ? `<nav class="record-jump" aria-label="Student record sections">${detailParts.map(([id, label]) => `<a href="#registry/students" data-record-jump="${id}">${label}</a>`).join("")}</nav>
+        <button class="icon-button" type="button" data-registry-page="1" title="Next page" aria-label="Next page" ${(state.rows?.offset || 0) + 25 >= (state.rows?.total || 0) ? "disabled" : ""}>&rarr;</button></div></aside>
+        <div class="review-detail">${detail ? `<nav class="record-jump" aria-label="Student record sections"><strong class="record-context">${esc(detail.legalName)} <span>${esc(detail.studentNumber)}</span></strong>${detailParts.map(([id, label]) => `<a href="#registry/students" data-record-jump="${id}">${label}</a>`).join("")}</nav>
           <section id="record-overview" class="ui-section"><div class="staff-record-hero"><div><p class="ui-eyebrow">${esc(detail.studentNumber)}</p><h2 class="ui-section-title">${esc(detail.legalName)}</h2><p class="ui-meta">${esc(detail.programmeName)} · ${esc(detail.intakeLabel)}</p></div>${ui.status(detail.status)}</div>
           ${ui.facts([["Faculty / department", `${detail.faculty} / ${detail.department}`], ["Study mode", detail.studyModeCode], ["Programme version", detail.programmeVersionId], ["Status", { html: ui.status(detail.status) }], ["Profile", detail.readiness.complete ? "Complete" : `Missing: ${detail.readiness.missing.join(", ")}`]], "ui-facts-3")}
           ${detail.legacySourceStatus ? ui.facts([["Previous system status", detail.legacySourceStatus],...(detail.legacyRecordedStudyYear ? [["Previously recorded study year",detail.legacyRecordedStudyYear]] : [])]) : ''}

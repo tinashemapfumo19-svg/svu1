@@ -18,7 +18,7 @@ for (const operation of ['registration', 'staff']) {
       await pool.query('update accounts set email=$2 where id=$1', [first.id, preserved]);
       const core = await hash(['accounts']);
       const registration = { email: email.toUpperCase(), preferredName: 'Linkage', legalName: 'Isolated linkage fixture' };
-      const staff = { email: email.toUpperCase(), legalName: 'Linkage fixture', preferredName: 'Linkage', category: 'LECTURER', grade: 'L1', departmentId: 'dept_computing', roleCode: 'lecturer', engagedOn: new Date(Date.now()-86400000).toISOString().slice(0,10), reason: 'Isolated appointment', linkExistingAccount: true };
+      const staff = { email: email.toUpperCase(), legalName: 'Linkage fixture', preferredName: 'Linkage', category: 'LECTURER', grade: 'L1', departmentId: 'dept_computing', roleCode: 'legacy_staff', engagedOn: new Date(Date.now()-86400000).toISOString().slice(0,10), reason: 'Isolated appointment', linkExistingAccount: true };
       let offer, accepted;
       if (operation === 'registration') {
         const before = await hash(['accounts', 'people', 'role_assignments', 'invitations', 'account_activation_tokens']);
@@ -32,7 +32,7 @@ for (const operation of ['registration', 'staff']) {
         const created = await api('/api/staff', staff, 201, admin.token);
         expect(created).toMatchObject({ status: 'invited', accountId: null, roles: [] });
         offer = (await get('/api/identity/staff-appointments', firstSession.token))[0];
-        expect(offer).toMatchObject({ employeeNumber: created.employeeNumber, roleCode: 'lecturer' });
+        expect(offer).toMatchObject({ employeeNumber: created.employeeNumber, roleCode: 'legacy_staff' });
         expect(await get('/api/identity/staff-appointments', secondSession.token)).toEqual([]);
         await api(`/api/identity/staff-appointments/${offer.invitationId}`, { accept: true }, 404, secondSession.token);
       }
@@ -57,7 +57,7 @@ for (const operation of ['registration', 'staff']) {
         await api(`/api/identity/staff-appointments/${offer.invitationId}`, { accept: true }, 200, firstSession.token);
         expect(await hash(['accounts'])).toEqual(before);
         expect((await pool.query("select 1 from staff_members where account_id=$1 and status='active'", [first.id])).rowCount).toBe(1);
-        expect((await pool.query("select 1 from role_assignments where account_id=$1 and role_code='lecturer'", [first.id])).rowCount).toBe(1);
+        expect((await pool.query("select 1 from role_assignments where account_id=$1 and role_code='legacy_staff'", [first.id])).rowCount).toBe(1);
       }
       expect((await pool.query('select email from accounts where id=$1', [first.id])).rows[0].email).toBe(preserved);
       async function account(mailbox) {

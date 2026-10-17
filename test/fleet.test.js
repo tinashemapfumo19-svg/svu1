@@ -9,7 +9,7 @@ const key=Buffer.alloc(32,9),actor={accountId:'a',roles:[{scope:{},permissions:[
 const vehicle={assetId:'asset',registration:'test 1',description:'Vehicle',distanceUnit:'km',openingOdometer:'1000',evidenceReference:'Evidence',requestKey:'valid_request_key'};
 test('fleet roles separate operational, review and restricted incident authority',()=>{
   const seed=createSeedData();
-  for(const code of ['fleet_officer','fleet_approver','fleet_safety_officer'])assert.ok(staffInvitationRoles.includes(code));
+  for(const code of ['fleet_officer','fleet_approver','fleet_safety_officer'])assert.equal(staffInvitationRoles.includes(code),false);
   assert.ok(seed.rolePermissions.fleet_officer.includes('fleet.manage'));assert.equal(seed.rolePermissions.fleet_officer.includes('fleet.incidents'),false);
   assert.ok(seed.rolePermissions.fleet_approver.includes('fleet.approve'));assert.equal(seed.rolePermissions.fleet_approver.includes('fleet.manage'),false);
   assert.ok(seed.rolePermissions.fleet_safety_officer.includes('fleet.incidents'));

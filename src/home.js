@@ -36,7 +36,11 @@
       [data.registrations, data.account, data.exams, data.results] = await Promise.all([read(`${base}/registrations`, "Registration"), read(`${base}/account`, "Account statement"), read(`${base}/exams`, "Examination timetable"), read(`${base}/results`, "Published results")]);
     }));
     if (session.canAny(["admissions.review", "admissions.decide", "admissions.completeness"])) tasks.push(read("/api/admissions/review/applications?limit=50", "Admissions queue").then((value) => { data.queue = value; }));
-    if (session.can("teaching.self")) tasks.push(read("/api/teaching/me", "Teaching allocations").then((value) => { data.teaching = value; }));
+    // Profiles such as Sysadmin carry teaching.self without a staff record; 404 means "no teaching", not a failure.
+    if (session.can("teaching.self")) tasks.push(get("/api/teaching/me", token).catch((error) => {
+      if (error.status !== 404) data.errors.push({ label: "Teaching allocations", status: error.status });
+      return null;
+    }).then((value) => { data.teaching = value; }));
     if (window.svuShell.isStaff()) tasks.push(read("/api/me/work-summary", "Work summary").then((value) => { data.work = value; }));
     if (session.can("admissions.apply") && !session.can("registry.self")) tasks.push(read("/api/calendar/me", "Calendar").then((value) => { data.calendar = value; }));
     await Promise.all(tasks);

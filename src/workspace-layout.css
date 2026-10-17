@@ -1,0 +1,116 @@
+/* Work areas: pin the chooser/context, keep the selected record in document flow. */
+.registry-workspace {
+  --workspace-top: calc(var(--svu-header-height, 64px) + 48px);
+  --workspace-local-height: 0px;
+  --workspace-jump-height: 52px;
+  --workspace-content-top: calc(var(--workspace-top) + var(--workspace-local-height) + 12px);
+}
+.registry-workspace > .workspace-tabs { top: var(--workspace-header-height, var(--svu-header-height)); background: var(--svu-bg-page); }
+.workspace-picker-filter { display: grid; gap: 10px; }
+.workspace-picker-filter > .field { min-width: 0; }
+.workspace-picker-results { min-height: 0; min-width: 0; }
+.record-context { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; font-size: 13px; }
+.record-context span { color: var(--svu-text-secondary); font-weight: 400; }
+.registry-workspace .record-jump { background: var(--svu-bg-solid); }
+.registry-workspace .record-jump a { flex: none; white-space: nowrap; }
+.registry-workspace .workspace-record-context { background: var(--svu-bg-solid); }
+.registry-workspace .record-workbench > .review-detail > section {
+  scroll-margin-top: calc(var(--workspace-content-top) + var(--workspace-jump-height) + 12px);
+}
+
+@media (min-width: 1024px) {
+  .registry-workspace:not(.workspace-layout-short) .workspace-picker:not(.workspace-picker-unpinned) {
+    position: sticky;
+    top: var(--workspace-content-top);
+    align-self: start;
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    max-height: calc(100dvh - var(--workspace-content-top) - 16px);
+    gap: 12px;
+  }
+  .registry-workspace:not(.workspace-layout-short) .workspace-picker-results {
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    scroll-padding-block: 8px;
+  }
+  .registry-workspace .workspace-picker .section-header,
+  .registry-workspace .workspace-picker .staff-pager { margin: 0; }
+  .registry-workspace .academic-tabs,
+  .registry-workspace .fleet-toolbar {
+    position: sticky;
+    top: var(--workspace-top);
+    z-index: 9;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 8px 0;
+    background: var(--svu-bg-solid);
+  }
+  .registry-workspace .academic-tabs > button { flex: none; }
+  .registry-workspace .fleet-tabs { flex-wrap: nowrap; }
+  .registry-workspace .fleet-tabs > button { flex: none; }
+  .registry-workspace:not(.workspace-layout-short) .workspace-picker-simple { grid-template-rows: auto minmax(0, 1fr) auto; }
+  .registry-workspace:not(.workspace-layout-short) .academic-list.workspace-picker { grid-template-rows: auto minmax(0, 1fr); }
+  .registry-workspace .academic-list .workspace-picker-results { display: grid; gap: 8px; align-content: start; }
+  .registry-workspace .staff-body .record-jump {
+    position: sticky;
+    top: var(--workspace-content-top);
+    z-index: 8;
+    flex-wrap: nowrap;
+    align-items: center;
+    overflow-x: auto;
+    box-shadow: 0 1px 0 var(--svu-border);
+  }
+  .registry-workspace .record-context { flex: 0 0 180px; }
+  .registry-workspace:not(.workspace-layout-short) .workspace-record-context {
+    position: sticky;
+    top: var(--workspace-content-top);
+    z-index: 7;
+    padding-block: 12px;
+    box-shadow: 0 1px 0 var(--svu-border);
+  }
+  .registry-workspace .staff-body .workspace-table {
+    max-height: min(560px, calc(100dvh - var(--workspace-content-top) - 100px));
+    overflow: auto;
+    scrollbar-gutter: stable;
+    scroll-padding-top: 56px;
+  }
+  .registry-workspace .workspace-table table { border-collapse: separate; border-spacing: 0; }
+  .registry-workspace .workspace-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--svu-bg-solid);
+    box-shadow: 0 1px 0 var(--svu-border);
+  }
+  .admissions-page { --admissions-sticky-top: var(--workspace-content-top); }
+  .registry-workspace .cal-side { top: var(--workspace-content-top); max-height: calc(100dvh - var(--workspace-content-top) - 16px); overflow-y: auto; }
+}
+
+.registry-workspace .workspace-picker-unpinned { position: static; max-height: none; }
+.registry-workspace .workspace-picker-unpinned .workspace-picker-results { overflow: visible; }
+
+/* A stacked layout should scroll as one page, without a tall pinned list covering the record. */
+@media (max-width: 1023px) {
+  .registry-workspace .registry-grid, .registry-workspace .academic-layout { grid-template-columns: minmax(0, 1fr); }
+  .registry-workspace .staff-body .record-jump,
+  .registry-workspace .academic-tabs,
+  .registry-workspace .fleet-toolbar,
+  .registry-workspace .workspace-picker,
+  .registry-workspace .workspace-record-context { position: static; }
+  .registry-workspace .workspace-picker { max-height: none; }
+  .registry-workspace .workspace-picker-results { max-height: none; overflow: visible; }
+  .registry-workspace .academic-list { max-height: none; overflow: visible; }
+}
+.registry-workspace.workspace-layout-short .staff-body .record-jump,
+.registry-workspace.workspace-layout-short .academic-tabs,
+.registry-workspace.workspace-layout-short .fleet-toolbar,
+.registry-workspace.workspace-layout-short .review-queue,
+.registry-workspace.workspace-layout-short .cal-side { position: static; height: auto; max-height: none; }
+.registry-workspace.workspace-layout-short .staff-body .workspace-table { max-height: none; }
+@media print {
+  .registry-workspace .workspace-picker, .registry-workspace .record-jump,
+  .registry-workspace .academic-tabs, .registry-workspace .fleet-toolbar, .registry-workspace .workspace-record-context,
+  .registry-workspace .workspace-tabs, .registry-workspace .review-queue { position: static !important; height: auto !important; max-height: none !important; }
+  .registry-workspace .workspace-picker-results, .registry-workspace .workspace-table { max-height: none !important; overflow: visible !important; }
+  .registry-workspace .workspace-table thead th { position: static; }
+}

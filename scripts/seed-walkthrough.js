@@ -43,7 +43,8 @@ try {
   const me = await api('GET', '/api/registry/me', null, student.token), programme = me.programmes[0];
   const staffBase = `/api/registry/programmes/${programme.id}`, own = `/api/registry/me/programmes/${programme.id}`;
   const registrarIdentity = await api('GET', '/api/identity/me', null, registrar.token);
-  for (const roleCode of ['finance_officer', 'records_manager', 'examinations_officer']) {
+  // Supervisor (legacy level 3) bundles the finance, records and examinations officer permissions.
+  for (const roleCode of ['legacy_supervisor']) {
     if (!registrarIdentity.roles.some((row) => row.code === roleCode)) await api('POST', '/api/access/role-assignments', { accountId: registrarIdentity.account.id, roleCode, scope: {}, reason }, admin.token);
   }
   let calendars = await api('GET', '/api/master-data/academic-periods', null, admin.token);
@@ -148,7 +149,7 @@ try {
   const staffList = await api('GET', '/api/staff?q=demo.lecturer', null, admin.token);
   let lecturer = staffList.items.find((row) => row.email === 'demo.lecturer@southvalley.test');
   if (!lecturer) {
-    lecturer = await api('POST', '/api/staff', { email: 'demo.lecturer@southvalley.test', legalName: 'Chipo Demo Ncube', preferredName: 'Chipo', category: 'LECTURER', grade: 'L1', departmentId: 'dept_computing', engagedOn: day(-90), roleCode: 'lecturer', reason }, admin.token);
+    lecturer = await api('POST', '/api/staff', { email: 'demo.lecturer@southvalley.test', legalName: 'Chipo Demo Ncube', preferredName: 'Chipo', category: 'LECTURER', grade: 'L1', departmentId: 'dept_computing', engagedOn: day(-90), roleCode: 'legacy_staff', reason }, admin.token);
     await api('POST', '/api/identity/activations', { token: await activationToken('demo.lecturer@southvalley.test'), password: 'Demo-Lecturer-2026!', preferredName: 'Chipo', legalName: 'Chipo Demo Ncube' });
   }
   const lecturerSession = await login('demo.lecturer@southvalley.test', 'Demo-Lecturer-2026!');

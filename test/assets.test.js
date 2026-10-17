@@ -28,8 +28,11 @@ test('asset authority is supplied only by the permission-bearing global role',()
   assert.equal(assetAuthority({roles:[{code:'asset_officer',permissions:['assets.manage'],scope:{}}]},'assets.manage'),true);
   assert.equal(assetAuthority({roles:[{code:'asset_approver',permissions:['assets.approve'],scope:{}}]},'assets.manage'),false);
 });
-test('asset roles can be appointed through the existing staff acceptance workflow',() => {
-  assert.ok(staffInvitationRoles.includes('asset_officer'));
-  assert.ok(staffInvitationRoles.includes('asset_approver'));
+// Staff are appointed to consolidated legacy levels (migration 119); asset authority comes from the
+// Supervisor/Management profile bundles, not from inviting the specialist roles directly.
+test('staff appointments offer consolidated levels, not specialist asset roles',() => {
+  assert.deepEqual(staffInvitationRoles,['legacy_staff','legacy_reports','legacy_supervisor','legacy_management','legacy_super_user']);
+  assert.ok(!staffInvitationRoles.includes('asset_officer'));
+  assert.ok(!staffInvitationRoles.includes('asset_approver'));
   assert.ok(!staffInvitationRoles.includes('system_administrator'));
 });

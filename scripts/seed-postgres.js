@@ -18,8 +18,10 @@ try {
   await pool.query("begin");
   const actualDatabase = (await pool.query('select current_database() as name')).rows[0].name;
   if (actualDatabase !== acknowledgedDatabase) throw new Error('Connected database does not match the reset acknowledgement.');
+  const roleSetup = await captureMigrationRoleSetup();
   await clearData();
   await insertSeedData();
+  await restoreMigrationRoleSetup(roleSetup);
   await pool.query("commit");
   console.log("Seeded PostgreSQL Phase 1 foundation data");
 } catch (error) {
@@ -27,6 +29,39 @@ try {
   throw error;
 } finally {
   await pool.end();
+}
+
+// Migrations (e.g. 119 consolidated legacy profiles) define roles, assignability and profile membership
+// that the seed's own role list does not know about. The reset truncates them, so carry them across.
+async function captureMigrationRoleSetup() {
+  const roles = (await pool.query(
+    "select code, name, risk, active, is_assignable, legacy_access_level from roles"
+  )).rows;
+  const members = await pool.query("select to_regclass('role_profile_members') is not null as present");
+  const profiles = members.rows[0].present
+    ? (await pool.query("select profile_code, member_code from role_profile_members")).rows
+    : [];
+  return { roles, profiles };
+}
+
+async function restoreMigrationRoleSetup({ roles, profiles }) {
+  for (const role of roles) {
+    await pool.query(
+      `insert into roles (code, name, risk, active, is_assignable, legacy_access_level) values ($1, $2, $3, $4, $5, $6)
+       on conflict (code) do update set name = excluded.name, active = excluded.active,
+         is_assignable = excluded.is_assignable, legacy_access_level = excluded.legacy_access_level`,
+      [role.code, role.name, role.risk, role.active, role.is_assignable, role.legacy_access_level]
+    );
+  }
+  for (const profile of profiles) {
+    await pool.query(
+      "insert into role_profile_members (profile_code, member_code) values ($1, $2) on conflict do nothing",
+      [profile.profile_code, profile.member_code]
+    );
+  }
+  if ((await pool.query("select to_regprocedure('refresh_legacy_access_profiles()') is not null as present")).rows[0].present) {
+    await pool.query("select refresh_legacy_access_profiles()");
+  }
 }
 
 async function clearData() {
@@ -103,6 +138,10 @@ async function insertSeedData() {
       [role.code, role.name, role.risk]
     );
   }
+
+  // The permissions trigger grants new permissions to this migration-defined role.
+  // Recreate it after the development reset before inserting permissions.
+  await pool.query("insert into roles (code, name, risk) values ('master_administrator', 'Master Administrator', 'critical') on conflict (code) do nothing");
 
   for (const permission of seed.permissions) {
     await pool.query(
