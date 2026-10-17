@@ -7,17 +7,24 @@ set -euo pipefail
 
 TARGET="${1:?Usage: deploy/deploy.sh root@<droplet-ip>}"
 LEGACY_ACADEMICS="${2:-}"
-[[ -z "$LEGACY_ACADEMICS" || "$LEGACY_ACADEMICS" == --legacy-academics ]] || { echo 'Unknown deployment option' >&2; exit 1; }
+PROJECTION="${3:-}"
+PROJECTION_SHA="${4:-}"
+[[ -z "$LEGACY_ACADEMICS" || "$LEGACY_ACADEMICS" == --legacy-academics || "$LEGACY_ACADEMICS" == --academic-projection ]] || { echo 'Unknown deployment option' >&2; exit 1; }
+if [[ "$LEGACY_ACADEMICS" == --academic-projection ]]; then
+  [[ "$PROJECTION" =~ ^/tmp/svu-academic-[a-f0-9]+\.json$ && "$PROJECTION_SHA" =~ ^[a-f0-9]{64}$ ]] || { echo 'Invalid projection path or checksum' >&2; exit 1; }
+fi
 SSH="ssh ${SVU_SSH_OPTS:-}"
 REV="$(git rev-parse --short HEAD)"
 [[ -z "$(git status --porcelain)" ]] || echo "Note: uncommitted changes are not included; deploying $REV."
 
 git archive --format=tar HEAD | $SSH "$TARGET" 'rm -rf /opt/svu/app.next && mkdir -p /opt/svu/app.next && tar -x -C /opt/svu/app.next'
 
-$SSH "$TARGET" bash -s "$REV" "$LEGACY_ACADEMICS" <<'REMOTE'
+$SSH "$TARGET" bash -s "$REV" "$LEGACY_ACADEMICS" "$PROJECTION" "$PROJECTION_SHA" <<'REMOTE'
 set -euo pipefail
 REV="$1"
 LEGACY_ACADEMICS="${2:-}"
+PROJECTION="${3:-}"
+PROJECTION_SHA="${4:-}"
 umask 077
 mkdir -p /var/backups/svu /opt/svu/shared/data
 sudo -u postgres pg_dump -Fc svu_rebuild > "/var/backups/svu/svu_rebuild-pre-$REV-$(date -u +%Y%m%dT%H%M%SZ).dump"
@@ -36,6 +43,9 @@ grep -v '^Skipping' /tmp/svu-migrate.log || true
 if [[ "$LEGACY_ACADEMICS" == --legacy-academics ]]; then
   sudo -u svu bash -c 'set -a; . /etc/svu/svu.env; set +a; node scripts/link-legacy-academic-records.js --apply'
 fi
+if [[ "$LEGACY_ACADEMICS" == --academic-projection ]]; then
+  sudo -u svu bash -c 'set -a; . /etc/svu/svu.env; set +a; node scripts/legacy-academic-projection.js apply "$1" "$2"' bash "$PROJECTION" "$PROJECTION_SHA"
+fi
 systemctl stop svu || true
 rm -rf /opt/svu/app.previous
 [[ -d /opt/svu/app ]] && mv /opt/svu/app /opt/svu/app.previous
@@ -48,7 +58,7 @@ done
 echo "Service did not become healthy; recent log:" >&2
 journalctl -u svu -n 40 --no-pager >&2
 systemctl stop svu || true
-mv /opt/svu/app /opt/svu/app.failed
+mv /opt/svu/app "/opt/svu/app.failed.$REV.$(date -u +%Y%m%dT%H%M%SZ)"
 mv /opt/svu/app.previous /opt/svu/app
 systemctl start svu
 echo 'Restored the previous application release; database backup retained.' >&2
