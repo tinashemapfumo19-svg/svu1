@@ -45,7 +45,7 @@
         <h3>Uncovered offerings</h3>${overview.uncovered.length ? `<ul class="uncovered-list">${overview.uncovered.map((row) => `<li><strong>${esc(row.code)}</strong> ${esc(row.title)} - ${esc(row.programmeCode)} ${esc(row.intakeLabel)} ${esc(row.periodName)} - ${row.enrolled} enrolled - ${esc(row.reason)}</li>`).join("")}</ul>` : "<p>Every open offering has an active lead lecturer.</p>"}
         <h3>Workload</h3>${overview.workload.length ? `<ul class="workload-list">${overview.workload.map((row) => `<li data-workload="${esc(row.staffId)}">${esc(row.staffName)} (${esc(row.employeeNumber)}): ${row.units} units across ${row.allocations} allocation(s)${row.staffStatus !== "active" ? ` - ${esc(row.staffStatus)}` : ""}</li>`).join("")}</ul>` : "<p>No active allocations.</p>"}
         <h3>Registration periods</h3><div class="hero-actions">${overview.periods.map((row) => `<button class="button button-secondary" type="button" data-teaching-load="${esc(row.id)}">${esc(row.programmeCode)} ${esc(row.intakeLabel)} - ${esc(row.name)}</button>`).join("") || "<p>No open registration periods.</p>"}</div>
-        ${legacyLinks(overview.legacyLinks)}${periodView(state)}</details>` : ""}${!overview && mine ? legacyLinks(mine.legacyLinks) : ''}`;
+        ${window.legacyAcademicUI.teaching(overview.legacyContexts,state.legacyClassLists)}${legacyLinks(overview.legacyLinks)}${periodView(state)}</details>` : ""}${!overview && mine ? window.legacyAcademicUI.teaching(mine.legacyContexts,state.legacyClassLists)+legacyLinks(mine.legacyLinks) : ''}`;
   }
   async function load(state,api) {
     state.teachingOverview = await api("GET","/api/teaching/overview").catch(() => null);
@@ -54,7 +54,12 @@
   }
   function bind(root,state,{api,act}) {
     root.querySelector("[data-teaching-panel]")?.addEventListener("toggle",(event) => {if (event.currentTarget.isConnected) state.teachingOpen = event.currentTarget.open;});
-    const reload = async () => {state.classLists = {}; await load(state,api);};
+    const reload = async () => {state.legacyClassLists = {};state.classLists = {}; await load(state,api);};
+    root.querySelectorAll('[data-legacy-class]').forEach(button=>button.addEventListener('click',()=>act(async()=>{
+      const [contextId,staffId]=button.dataset.legacyClass.split(':');
+      const list=await api('GET',`/api/teaching/legacy-contexts/${encodeURIComponent(contextId)}/staff/${encodeURIComponent(staffId)}/class-list`);
+      state.legacyClassLists={...state.legacyClassLists,[button.dataset.legacyClass]:list};
+    })));
     root.querySelectorAll("[data-teaching-load]").forEach((button) => button.addEventListener("click",() => act(async () => {state.teachingPeriod = await api("GET",`/api/teaching/periods/${button.dataset.teachingLoad}`);})));
     root.querySelectorAll("[data-class-list-load]").forEach((button) => button.addEventListener("click",() => act(async () => {state.classLists = {...state.classLists,[button.dataset.classListLoad]:await api("GET",`/api/teaching/allocations/${button.dataset.classListLoad}/class-list`)};})));
     root.querySelectorAll("[data-allocation-propose]").forEach((form) => form.addEventListener("submit",(event) => {

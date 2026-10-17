@@ -894,6 +894,12 @@ async function handleApi(req, res, url, repository, config) {
     const actor = await requirePermission(req,repository,"teaching.view");
     sendJson(res,200,{data:await repository.teachingOverview(actor)}); return;
   }
+  const legacyClassRoute=url.pathname.match(/^\/api\/teaching\/legacy-contexts\/([^/]+)\/staff\/([^/]+)\/class-list$/);
+  if(legacyClassRoute && req.method==='GET'){
+    let actor;
+    try {actor=await requirePermission(req,repository,'teaching.view');}catch(error){if(error.statusCode!==403)throw error;actor=await requirePermission(req,repository,'teaching.self');}
+    sendJson(res,200,{data:await repository.legacyClassList(legacyClassRoute[1],legacyClassRoute[2],actor)});return;
+  }
   if (url.pathname === "/api/teaching/me" && req.method === "GET") {
     const actor = await requirePermission(req,repository,"teaching.self");
     sendJson(res,200,{data:await repository.myTeaching(actor)}); return;

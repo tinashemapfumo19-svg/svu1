@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { actorCanAccessScope, assertActorCanAccessScope, insertAudit, requestError, withTransaction } from "../support.js";
 import { studyYearSelect, withStudyYear } from "./study-year.js";
+import {legacyAcademicFor} from './legacy-academics.js';
 
 const phonePattern = /^\+[1-9]\d{7,14}$/;
 const relationships = ["parent", "spouse", "sibling", "guardian", "other"];
@@ -65,7 +66,9 @@ export function createRegistryModule(pool) {
         const student = await ownedStudent(client, actor);
         const profile = await profileFor(client, student.id);
         const programmes = (await client.query(`${programmeSelect} where sp.student_id = $1 order by sp.created_at desc`, [student.id])).rows;
-        return { ...student, profile, programmes:programmes.map(withStudyYear), readiness: onboardingReadiness(profile) };
+        const linked=[];
+        for(const programme of programmes)linked.push({...withStudyYear(programme),legacyAcademic:await legacyAcademicFor(client,programme.id,{includeResults:true,own:true})});
+        return { ...student, profile, programmes:linked, readiness: onboardingReadiness(profile) };
       });
     },
 
@@ -117,7 +120,7 @@ export function createRegistryModule(pool) {
         const canOnboard = actor.permissions.includes("registry.onboard") && actorCanAccessScope({ ...actor, authorizingPermission: "registry.onboard" }, { programmeCode: programme.programmeCode, intakeId: programme.intakeId });
         const canViewResults = actor.permissions.includes("results.view") && actorCanAccessScope({ ...actor, authorizingPermission: "results.view" }, { programmeCode: programme.programmeCode, intakeId: programme.intakeId });
         const canViewAcademic = actor.permissions.includes("academic.view") && actorCanAccessScope({ ...actor, authorizingPermission: "academic.view" }, { programmeCode: programme.programmeCode, intakeId: programme.intakeId });
-        return { ...withStudyYear(programme), history, readiness: onboardingReadiness(profile), canConfigureRegistration, canOnboard, canViewResults, canViewAcademic };
+        return { ...withStudyYear(programme), history, legacyAcademic:await legacyAcademicFor(client,programmeId,{includeResults:canViewResults}), readiness: onboardingReadiness(profile), canConfigureRegistration, canOnboard, canViewResults, canViewAcademic };
       });
     },
 

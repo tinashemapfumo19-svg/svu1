@@ -1,4 +1,5 @@
 import { actorCanAccessScope, assertActorCanAccessScope, assertSeparateApprover, insertAudit, parseEffectiveDate, requestError, todayIso, withTransaction } from "../support.js";
+import {legacyTeachingContexts} from './legacy-academics.js';
 
 export const teachingRoles = ["lead","co_lecturer","tutor"];
 const roles = [...teachingRoles,"moderator","examiner"];
@@ -188,7 +189,7 @@ export function createTeachingModule(pool) {
             }
           }
         }
-        return {periods,uncovered,workload:[...workload.values()].sort((a,b) => b.units - a.units),legacyLinks:await legacyTeachingFor(db,actor)};
+        return {periods,uncovered,workload:[...workload.values()].sort((a,b) => b.units - a.units),legacyLinks:await legacyTeachingFor(db,actor),legacyContexts:await legacyTeachingContexts(db,actor)};
       });
     },
     async myTeaching(actor) {
@@ -196,7 +197,23 @@ export function createTeachingModule(pool) {
         const staff = (await db.query("select id,status from staff_members where account_id = $1",[actor.accountId])).rows[0];
         if (!staff) throw requestError(404,"No staff record is linked to this account.");
         const allocations = (await db.query(`${allocationSelect} where a.staff_id = $1 and a.status = 'active' order by a.effective_from desc`,[staff.id])).rows;
-        return {staffId:staff.id,status:staff.status,allocations,legacyLinks:await legacyTeachingFor(db,actor,staff.id)};
+        return {staffId:staff.id,status:staff.status,allocations,legacyLinks:await legacyTeachingFor(db,actor,staff.id),legacyContexts:await legacyTeachingContexts(db,actor,staff.id)};
+      });
+    },
+    async legacyClassList(contextId,staffId,actor) {
+      return withTransaction(pool,async db=>{
+        const own=(await db.query("select id from staff_members where id=$1 and account_id=$2 and status='active'",[staffId,actor.accountId])).rowCount>0;
+        const permission=own&&actor.permissions.includes('teaching.self')?'teaching.self':'teaching.view';
+        if(!actor.permissions.includes(permission))throw requestError(404,'Historical class was not found.');
+        const contexts=await legacyTeachingContexts(db,actor,permission==='teaching.self'?staffId:null);
+        const context=contexts.find(c=>c.contextId===contextId&&c.staffId===staffId);
+        if(!context)throw requestError(404,'Historical class was not found.');
+        const students=(await db.query(`select distinct s.student_number as "studentNumber",p.legal_name as "legalName",
+          sp.intake_id as "intakeId" from legacy_academic_records r join students s on s.id=r.student_id
+          join people p on p.id=s.person_id left join student_programmes sp on sp.id=r.student_programme_id
+          where r.context_id=$1 and r.staff_id=$2 order by s.student_number`,[contextId,staffId])).rows
+          .filter(s=>actorCanAccessScope({...actor,authorizingPermission:permission},{programmeCode:context.programmeCode,intakeId:s.intakeId}));
+        return {...context,historical:true,students:students.map(({intakeId,...student})=>student)};
       });
     },
     // Lecturers see class lists only through an active allocation in force today; registry staff through their scope.

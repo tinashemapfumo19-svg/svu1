@@ -147,8 +147,8 @@
           <label class="field"><span>Approval reason</span><textarea class="input" name="reason" maxlength="2000" required></textarea></label><button class="button button-primary" ${!detail.readiness.complete ? "disabled" : ""}>Approve onboarding</button></form>` : ""}</section>
           <section id="record-lifecycle"><h3>Status history</h3><ul class="ui-rows">${detail.history.map((item) => `<li class="ui-row">${ui.ico("history", "blue", "ui-icon-sm")}<div><strong>${esc(item.fromStatus || (detail.originProgrammeId ? "transfer" : "conversion"))} to ${esc(item.toStatus)}</strong><span class="ui-meta">${esc(item.reason)}</span></div></li>`).join("")}</ul>${window.registryLifecycleUI.render(state)}${window.registryTransfersUI.render(state)}</section>
           <section id="record-finance">${window.registryFinanceUI.render(state)}${window.registryPlansUI.render(state)}${window.registrySponsorsUI.renderProgramme(state)}</section>
-          <section id="record-registration">${window.courseWithdrawalsUI.render(state.withdrawals, state.registrations)}${window.registryRegistrationUI.render(state)}</section>
-          <section id="record-results">${window.registryResultsUI.render(state)}${window.transcriptsUI.staffRender(state)}${window.registryAwardsUI.staffRender(state)}</section>
+          <section id="record-registration">${window.legacyAcademicUI.courses(detail.legacyAcademic)}${window.courseWithdrawalsUI.render(state.withdrawals, state.registrations)}${window.registryRegistrationUI.render(state)}</section>
+          <section id="record-results">${window.legacyAcademicUI.results(detail.legacyAcademic)}${window.registryResultsUI.render(state)}${window.transcriptsUI.staffRender(state)}${window.registryAwardsUI.staffRender(state)}</section>
           <section id="record-academic">${window.registryAcademicUI.render(state)}${window.registryCreditsUI.render(state)}</section>` : ui.emptyState({ glyph: "user", title: "Select a student record", text: "Search, then choose a record to see its programme, status, finance, registration and results." })}</div>
       </div>`;
   }
