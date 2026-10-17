@@ -22,7 +22,7 @@ body :is(h1,h2,h3,h4,.ui-meta,.ui-facts dd) { overflow-wrap: anywhere; }
 .header-container, .student-mode .header-container { min-height: calc(var(--svu-header-height) - 1px); grid-template-columns: auto minmax(0,1fr) auto; gap: var(--svu-space-4); flex-wrap: nowrap; padding-block: 0; }
 .header-container .brand { max-width: 240px; white-space: normal; line-height: 18px; }
 .header-container .brand > span:last-child { display: block; }
-.nav-links { background: transparent; padding: 0; min-width: 0; gap: var(--svu-space-1); }
+.nav-links { background: transparent; padding: 0; min-width: 0; max-width: 100%; gap: var(--svu-space-1); flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
 .nav-links a { padding-inline: var(--svu-space-3); min-height: 40px; font-size: 13px; }
 .nav-links a.is-active { background: var(--svu-blue-soft); box-shadow: none; }
 .nav-actions { min-width: 0; }
@@ -97,6 +97,11 @@ body :is(h1,h2,h3,h4,.ui-meta,.ui-facts dd) { overflow-wrap: anywhere; }
 .student-local-nav,.registry-workspace > .workspace-tabs { position: sticky; top: var(--svu-header-height); z-index: 10; min-height: 44px; background: var(--svu-bg-page); }
 .ui-sticky,.cal-side,.staff-body .record-jump { position: static; }
 .student-command-results { overscroll-behavior: contain; }
+/* The full staff navigation and expanded search need a wide desktop header.
+   Keep command search available while giving laptop navigation its own space. */
+@media (max-width:1399px) {
+  .nav-actions .search { display: none; }
+}
 @media (max-width:1199px) {
   :root { --svu-page-gutter: 24px; }
   .header-container .brand > span:last-child { display: none; }
